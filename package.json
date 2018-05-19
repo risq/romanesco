@@ -1,0 +1,66 @@
+{
+  "name": "romanesco",
+  "version": "0.1.0",
+  "description": "Generative art framework",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node server",
+    "dev":
+      "webpack-dev-server -d --config ./config/editor/webpack.config.dev.js",
+    "build-editor":
+      "NODE_ENV=production webpack --config ./config/editor/webpack.config.release.js",
+    "lint": "eslint src config",
+    "lint-fix": "eslint src config --fix",
+    "test": "echo \"tests: todo !\"",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": ["eslint", "git add"]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:risq/romanesco.git"
+  },
+  "author": "Valentin LEDRAPIER <valentin.ledrapier@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^8.5.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "clean-webpack-plugin": "^0.1.19",
+    "compression-webpack-plugin": "^1.1.11",
+    "css-loader": "^0.28.4",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-import": "^2.12.0",
+    "friendly-errors-webpack-plugin": "^1.7.0",
+    "hard-source-webpack-plugin": "^0.6.9",
+    "html-webpack-plugin": "^3.2.0",
+    "husky": "^0.14.3",
+    "less": "^3.0.4",
+    "less-loader": "^4.1.0",
+    "lint-staged": "^7.1.1",
+    "mini-css-extract-plugin": "^0.4.0",
+    "monaco-editor-webpack-plugin": "^1.2.0",
+    "postcss-loader": "^2.1.5",
+    "raw-loader": "^0.5.1",
+    "style-loader": "^0.21.0",
+    "uglifyjs-webpack-plugin": "^1.2.4",
+    "webpack": "^4.8.3",
+    "webpack-cli": "^2.1.3",
+    "webpack-dev-server": "^3.1.4",
+    "webpack-glsl-loader": "^1.0.1",
+    "webpack-merge": "^4.1.2"
+  },
+  "dependencies": {
+    "babel-standalone": "^6.26.0",
+    "event-emitter": "^0.3.5",
+    "express": "^4.16.3",
+    "lodash": "^4.17.10",
+    "monaco-editor": "^0.13.1",
+    "three": "^0.92.0",
+    "three-orbit-controls": "^82.1.0"
+  }
+}
