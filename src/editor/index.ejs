@@ -1,0 +1,70 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romanesco</title>
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
+
+  </head>
+  <body>
+    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <div class="navbar-item">
+          <h1>romanesco</h1>
+        </div>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div class="navbar-menu">
+        <div class="navbar-start">
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a href="#" class="navbar-link">
+              examples
+            </a>
+            <div class="navbar-dropdown">
+              <% examplesFiles.children.forEach(function(subFolder) { %>
+                <% if (subFolder.children) { %>
+                  <div class="dropdown is-hoverable">
+                    <div class="dropdown-trigger">
+                      <a href="#" class="navbar-item">
+                        <%= subFolder.name %>
+                      </a>
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                      <div class="dropdown-content">
+                        <% subFolder.children.forEach(function(exampleFile) {
+                          var exampleName = exampleFile.name.replace(/\.[^/.]+$/, "");
+                          if (!exampleFile.children) { %>
+                            <a href="/examples/<%= subFolder.name %>/<%= exampleName %>" class="dropdown-item" data-navigo>
+                              <%= exampleName %>
+                            </a>
+                          <% }
+                        }); %>
+                      </div>
+                    </div>
+                  </div>
+                <% } %>
+              <% }); %>
+            </div>
+          </div>
+        </div>
+
+        <div class="navbar-end">
+          <!-- <a class="navbar-item" href="https://bulma.io/">
+            Run
+          </a> -->
+        </div>
+      </div>
+    </nav>
+    <div class="viewer" id="viewer">
+      <div class="iframe-container" id="iframe-container"></div>
+    </div>
+    <div class="editor" id="editor"></div>
+  </body>
+</html>

@@ -1,3 +1,5 @@
+@import "./bulma";
+
 html,
 body {
   width: 100%;
@@ -5,36 +7,20 @@ body {
   margin: 0;
   overflow: hidden;
   background-color: #000000;
-  font-family: "Source Code Pro", monospace;
 }
 
-header {
-  position: absolute;
-  top: 0;
-  height: 44px;
-  line-height: 44px;
-  left: 0;
-  right: 0;
-  background-color: #0ca65c;
-  color: #efefef;
-
+nav {
   h1 {
-    margin: 0 0 0 18px;
-    font-size: 18px;
-    display: inline;
-  }
-
-  h2 {
-    display: inline;
-    margin: 0;
-    font-size: 12px;
-    color: #eaeaea;
+    font-family: "Source Code Pro", monospace;
+    margin: 0 8px 0 0;
+    font-size: 20px;
+    font-weight: bold;
   }
 }
 
 .viewer {
   position: absolute;
-  top: 44px;
+  top: 52px;
   bottom: 0;
   left: 550px;
   right: 0;
@@ -53,7 +39,7 @@ header {
 
 .editor {
   position: absolute;
-  top: 44px;
+  top: 52px;
   bottom: 0;
   width: 600px;
   z-index: 20;

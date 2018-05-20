@@ -5,18 +5,17 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node server",
-    "dev": "webpack-dev-server -d --config ./config/editor/webpack.config.dev.js",
-    "build-editor": "NODE_ENV=production webpack --config ./config/editor/webpack.config.release.js",
+    "dev":
+      "webpack-dev-server -d --config ./config/editor/webpack.config.dev.js",
+    "build-editor":
+      "NODE_ENV=production webpack --config ./config/editor/webpack.config.release.js",
     "lint": "eslint src config",
     "lint-fix": "eslint src config --fix",
     "test": "echo \"tests: todo !\"",
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,jsx}": [
-      "eslint",
-      "git add"
-    ]
+    "*.{js,jsx}": ["eslint", "git add"]
   },
   "repository": {
     "type": "git",
@@ -31,7 +30,9 @@
     "babel-preset-env": "^1.7.0",
     "clean-webpack-plugin": "^0.1.19",
     "compression-webpack-plugin": "^1.1.11",
+    "copy-webpack-plugin": "^4.5.1",
     "css-loader": "^0.28.4",
+    "directory-tree": "^2.1.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-loader": "^2.0.0",
@@ -57,10 +58,11 @@
   },
   "dependencies": {
     "babel-standalone": "^6.26.0",
+    "bulma": "^0.7.1",
     "event-emitter": "^0.3.5",
-    "express": "^4.16.3",
     "lodash": "^4.17.10",
     "monaco-editor": "^0.13.1",
+    "navigo": "^7.1.2",
     "three": "^0.92.0",
     "three-orbit-controls": "^82.1.0"
   }

@@ -15,19 +15,20 @@ module.exports = merge(common, {
   mode: "development",
   devtool: "cheap-eval-source-map",
   plugins: [
-    new FriendlyErrorsWebpackPlugin({
-      compilationSuccessInfo: {
-        messages: [`Development server is running at http://localhost:${PORT}`],
-      },
-    }),
+    // new FriendlyErrorsWebpackPlugin({
+    //   compilationSuccessInfo: {
+    //     messages: [`Development server is running at http://localhost:${PORT}`],
+    //   },
+    // }),
     new HardSourceWebpackPlugin(),
   ],
   devServer: {
     host: "localhost",
     port: PORT,
-    quiet: true,
+    // quiet: true,
     contentBase: path.join(DIST_DIR, "app"),
     clientLogLevel: "error",
+    historyApiFallback: true,
     inline: true, // live reloading
     stats: {
       colors: true,

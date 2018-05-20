@@ -15,15 +15,14 @@ monaco.editor.defineTheme("romanesco", {
   inherit: true,
   rules: [{ background: "EDF9FA" }],
   colors: {
-    "editor.background": "#111111",
+    "editor.background": "#000000",
     "editor.foreground": "#fefefe",
     "editor.lineHighlightBackground": "#FFFFFF10",
   },
 });
 
-function create(element, { value }) {
+function create(element) {
   editor = monaco.editor.create(element, {
-    value,
     theme: "romanesco",
     language: "javascript",
     minimap: {
@@ -72,8 +71,13 @@ function getValue() {
   return editor.getValue();
 }
 
+function setValue(value) {
+  return editor.setValue(value);
+}
+
 export default {
   create,
   getValue,
+  setValue,
   events,
 };

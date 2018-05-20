@@ -1,5 +1,5 @@
 import { transform } from "babel-standalone";
-
+import Navigo from "navigo";
 import editor from "./editor";
 
 import defaultScript from "!raw-loader!./ressources/defaultScript.js"; // eslint-disable-line
@@ -34,7 +34,29 @@ function loadCode() {
   }
 }
 
-editor.create(document.getElementById("editor"), { value: defaultScript });
+function loadDefault() {
+  editor.setValue(defaultScript);
+  loadCode();
+}
+
+function loadExample({ folder, file }) {
+  fetch(`/ressources/examples/${folder}/${file}.js`)
+    .then(response => response.text())
+    .then((exampleCode) => {
+      editor.setValue(exampleCode);
+      loadCode(exampleCode);
+    });
+}
+
+editor.create(document.getElementById("editor"));
 editor.events.on("validate", loadCode);
 
-loadCode();
+const router = new Navigo(
+  `${window.location.protocol}//${window.location.host}`
+);
+router
+  .on({
+    "/": loadDefault,
+    "examples/:folder/:file": loadExample,
+  })
+  .resolve();

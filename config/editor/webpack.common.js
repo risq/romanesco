@@ -1,11 +1,16 @@
 const path = require("path");
+const dirTree = require("directory-tree");
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const ROOT_DIR = path.resolve(__dirname, "../..");
 const DIST_DIR = path.resolve(ROOT_DIR, "build");
+const EXAMPLES_DIR = path.resolve(ROOT_DIR, "examples");
+
+const examplesFiles = dirTree(EXAMPLES_DIR, { extensions: /\.js$/ });
 
 module.exports = {
   entry: {
@@ -16,6 +21,7 @@ module.exports = {
     path: DIST_DIR,
     filename: "[name].js",
     sourceMapFilename: "[file].map",
+    publicPath: "/",
   },
   target: "web",
   module: {
@@ -58,14 +64,18 @@ module.exports = {
       filename: "style/[name].[chunkhash].bundle.css",
     }),
     new HtmlWebpackPlugin({
-      template: "src/editor/index.html",
+      template: "src/editor/index.ejs",
       inject: true,
       sourceMap: true,
       chunksSortMode: "dependency",
       chunks: ["editor"],
+      templateParameters: {
+        examplesFiles,
+      },
     }),
     new MonacoWebpackPlugin({
       languages: ["javascript"],
     }),
+    new CopyWebpackPlugin([{ from: "examples", to: "ressources/examples" }]),
   ],
 };
