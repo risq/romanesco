@@ -5,6 +5,9 @@ THREE.OrbitControls = OrbitControls(THREE);
 
 export default class Viewer {
   constructor() {
+    this.mouseIsDown = false;
+    this.needsUpdate = true;
+
     this.init();
     this.animate();
   }
@@ -33,7 +36,9 @@ export default class Viewer {
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(this.renderer.domElement);
+
+    this.domElement = this.renderer.domElement;
+    document.body.appendChild(this.domElement);
 
     this.camera.position.set(-20, 15, 20);
     this.camera.lookAt(new THREE.Vector3());
@@ -44,15 +49,66 @@ export default class Viewer {
     );
     // controls.autoRotate = true;
     this.controls.autoRotateSpeed = 0.4;
+
+    this.bindEvents();
   }
 
   animate() {
     requestAnimationFrame(this.animate.bind(this));
-    this.controls.update();
-    this.render();
+
+    if (this.needsUpdate) {
+      this.needsUpdate = false;
+
+      this.controls.update();
+      this.render();
+    }
   }
 
   render() {
     this.renderer.render(this.scene, this.camera);
+  }
+
+  addMesh(mesh) {
+    this.scene.add(mesh);
+  }
+
+  bindEvents() {
+    this.domElement.addEventListener(
+      "mousedown",
+      () => {
+        this.mouseIsDown = true;
+      },
+      false
+    );
+    this.domElement.addEventListener(
+      "mouseup",
+      () => {
+        this.mouseIsDown = false;
+      },
+      false
+    );
+    this.domElement.addEventListener(
+      "mousemove",
+      () => {
+        if (this.mouseIsDown) {
+          this.needsUpdate = true;
+        }
+      },
+      false
+    );
+    this.domElement.addEventListener(
+      "wheel",
+      () => {
+        this.needsUpdate = true;
+      },
+      false
+    );
+    this.domElement.addEventListener(
+      "touchmove",
+      () => {
+        this.needsUpdate = true;
+      },
+      false
+    );
   }
 }

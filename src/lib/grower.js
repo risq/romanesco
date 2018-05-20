@@ -3,7 +3,8 @@ import * as THREE from "three";
 import GrowerIteration from "./growerIteration";
 
 export default class Grower {
-  constructor() {
+  constructor({ viewer }) {
+    this.viewer = viewer;
     this.rules = {};
     this.mesh = new THREE.Object3D();
     this.nextIterationCalls = [];
@@ -11,6 +12,10 @@ export default class Grower {
     this.maxObjects = 10000;
     this.depth = 0;
     this.maxDepth = 100;
+
+    if (this.viewer) {
+      this.viewer.addMesh(this.mesh);
+    }
   }
 
   start(iteration, endCallback) {
@@ -61,6 +66,10 @@ export default class Grower {
     iterationCalls.forEach(({ ruleName, iteration }) => {
       this.rules[ruleName].rule.call(iteration);
     });
+
+    if (this.viewer) {
+      this.viewer.needsUpdate = true;
+    }
 
     setTimeout(this.iterate.bind(this), 1);
   }

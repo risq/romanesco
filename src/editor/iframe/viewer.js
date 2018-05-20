@@ -2,9 +2,7 @@ import * as THREE from "three";
 import { Viewer, Grower, rand, shapes } from "../../index";
 
 const viewer = new Viewer();
-const grower = new Grower();
-
-viewer.scene.add(grower.mesh);
+const grower = new Grower({ viewer });
 
 Object.assign(window, {
   THREE,
