@@ -10,9 +10,9 @@
   <body>
     <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <div class="navbar-item">
+        <a href="/" class="navbar-item" data-navigo>
           <h1>romanesco</h1>
-        </div>
+        </a>
 
         <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
           <span aria-hidden="true"></span>
@@ -24,17 +24,17 @@
       <div class="navbar-menu">
         <div class="navbar-start">
           <div class="navbar-item has-dropdown is-hoverable">
-            <a href="#" class="navbar-link">
+            <div class="navbar-link">
               examples
-            </a>
+            </div>
             <div class="navbar-dropdown">
               <% examplesFiles.children.forEach(function(subFolder) { %>
                 <% if (subFolder.children) { %>
                   <div class="dropdown is-hoverable">
                     <div class="dropdown-trigger">
-                      <a href="#" class="navbar-item">
+                      <div class="navbar-item">
                         <%= subFolder.name %>
-                      </a>
+                      </div>
                     </div>
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                       <div class="dropdown-content">
@@ -62,8 +62,8 @@
         </div>
       </div>
     </nav>
-    <div class="viewer" id="viewer">
-      <div class="iframe-container" id="iframe-container"></div>
+    <div class="viewer-container">
+      <div class="viewer" id="viewer"></div>
     </div>
     <div class="editor" id="editor"></div>
   </body>

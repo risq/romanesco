@@ -2,6 +2,10 @@ import * as monaco from "monaco-editor"; // eslint-disable-line
 import EventEmitter from "event-emitter";
 import { debounce } from "lodash";
 
+import viewer from "./viewer";
+
+import defaultScript from "!raw-loader!./ressources/defaultScript.js"; // eslint-disable-line
+
 let editor;
 const events = new EventEmitter();
 
@@ -21,7 +25,7 @@ monaco.editor.defineTheme("romanesco", {
   },
 });
 
-function create(element) {
+function init(element) {
   editor = monaco.editor.create(element, {
     theme: "romanesco",
     language: "javascript",
@@ -48,7 +52,7 @@ function create(element) {
   editor.addCommand(
     monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, // eslint-disable-line no-bitwise
     () => {
-      events.emit("validate");
+      viewer.loadCode(editor.getValue());
       editor.getAction("editor.action.formatDocument").run();
     }
   );
@@ -72,13 +76,22 @@ function getValue() {
   return editor.getValue();
 }
 
-function setValue(value) {
-  return editor.setValue(value);
+function setValue(value, { updateViewer = true } = {}) {
+  editor.setValue(value);
+
+  if (updateViewer) {
+    viewer.loadCode(value);
+  }
+}
+
+function reset() {
+  setValue(defaultScript);
 }
 
 export default {
-  create,
+  init,
   getValue,
   setValue,
+  reset,
   events,
 };

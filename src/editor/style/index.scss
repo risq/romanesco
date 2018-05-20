@@ -18,7 +18,7 @@ nav {
   }
 }
 
-.viewer {
+.viewer-container {
   position: absolute;
   top: 52px;
   bottom: 0;
@@ -26,7 +26,7 @@ nav {
   right: 0;
   z-index: 10;
 
-  .iframe-container {
+  .viewer {
     position: relative;
 
     iframe {
