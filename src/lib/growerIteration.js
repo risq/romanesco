@@ -144,13 +144,13 @@ export default class GrowerIteration {
     const oldMatrix = this.matrix.clone();
 
     for (let i = 0; i < count; i++) {
-      const multipliedMatrix = oldMatrix.multiply(transformMatrix).clone();
+      const matrix = oldMatrix.multiply(transformMatrix).clone();
 
-      cb.call(
-        Object.assign({}, this, {
-          matrix: multipliedMatrix,
-        })
-      );
+      const newIteration = this.getNewIteration({
+        matrix,
+      });
+
+      cb.call(newIteration);
     }
   }
 
