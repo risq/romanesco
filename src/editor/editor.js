@@ -36,6 +36,7 @@ function create(element) {
       verticalScrollbarSize: 4,
     },
     renderIndentGuides: true,
+    fontSize: 14,
   });
 
   editor.model.onDidChangeContent(
