@@ -8,7 +8,7 @@ const defaultMatrix = new THREE.Matrix4().compose(
   new THREE.Vector3(1, 1, 1)
 );
 
-const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+const cubeGeometry = new THREE.BoxBufferGeometry(1, 1, 1);
 
 function getTrianglesNormals({
   i,
@@ -100,6 +100,10 @@ export default class GrowerIteration {
   }
 
   call(ruleName, params) {
+    if (!this.grower.rules[ruleName]) {
+      throw new Error(`Rule "${ruleName}" does not exist.`);
+    }
+
     const matrix = params
       ? this.matrix.clone().multiply(getMatrix(params, this.matrix))
       : this.matrix.clone();
@@ -151,6 +155,121 @@ export default class GrowerIteration {
   }
 
   box(params) {
+    this.instanciateMesh(cubeGeometry, params);
+  }
+
+  sphere(params, { segments = 12 } = {}) {
+    const geometry = new THREE.SphereBufferGeometry(0.5, segments, segments);
+
+    this.instanciateMesh(geometry, params);
+  }
+
+  plane(params) {
+    const geometry = new THREE.PlaneBufferGeometry(1);
+
+    this.instanciateMesh(geometry, params);
+  }
+
+  cone(params, { segments = 12 } = {}) {
+    const geometry = new THREE.ConeBufferGeometry(0.5, 1, segments, 1);
+
+    this.instanciateMesh(geometry, params);
+  }
+
+  cylinder(
+    params,
+    { segments = 12, radiusTop = 0.5, radiusBottom = 0.5 } = {}
+  ) {
+    const geometry = new THREE.CylinderBufferGeometry(
+      radiusTop,
+      radiusBottom,
+      1,
+      segments
+    );
+
+    this.instanciateMesh(geometry, params);
+  }
+
+  circle(params, { segments = 12 } = {}) {
+    const geometry = new THREE.CircleBufferGeometry(0.5, segments, segments);
+
+    this.instanciateMesh(geometry, params);
+  }
+
+  torus(
+    params,
+    { tubeRadius = 0.4, radialSegments = 8, tubularSegments = 12 } = {}
+  ) {
+    const geometry = new THREE.TorusBufferGeometry(
+      0.5,
+      tubeRadius,
+      radialSegments,
+      tubularSegments
+    );
+
+    this.instanciateMesh(geometry, params);
+  }
+
+  tetrahedron(params) {
+    const geometry = new THREE.TetrahedronBufferGeometry(0.5);
+
+    this.instanciateMesh(geometry, params);
+  }
+
+  octahedron(params) {
+    const geometry = new THREE.OctahedronBufferGeometry(0.5);
+
+    this.instanciateMesh(geometry, params);
+  }
+
+  icosahedron(params) {
+    const geometry = new THREE.IcosahedronBufferGeometry(0.5);
+
+    this.instanciateMesh(geometry, params);
+  }
+
+  dodecahedron(params) {
+    const geometry = new THREE.DodecahedronBufferGeometry(0.5);
+
+    this.instanciateMesh(geometry, params);
+  }
+
+  createExtrudeMesh(params, { shape } = {}) {
+    if (!shape) {
+      throw new Error("ExtrudedShape mesh requires a `shape` option");
+    }
+
+    const geometry = new THREE.ExtrudeBufferGeometry(shape, {
+      steps: 1,
+      amount: 1,
+      bevelEnabled: false,
+    });
+
+    this.instanciateMesh(geometry, params, { fixRotation: true });
+  }
+
+  createLatheMesh(params, { points, segments = 12 } = {}) {
+    if (!points) {
+      throw new Error("Lathe mesh requires a `points` option");
+    }
+
+    const geometry = new THREE.LatheBufferGeometry(points, {
+      segments,
+    });
+
+    this.instanciateMesh(geometry, params);
+  }
+
+  createParametricMesh(params, { func, slices = 12, stacks = 12 }) {
+    if (!func) {
+      throw new Error("Parametric mesh requires a `func` option");
+    }
+    const geometry = new THREE.ParametricBufferGeometry(func, slices, stacks);
+
+    this.instanciateMesh(geometry, params);
+  }
+
+  instanciateMesh(geometry, params, { fixRotation } = {}) {
     if (this.grower.objectsCount >= this.grower.maxObjects) {
       return;
     }
@@ -161,15 +280,19 @@ export default class GrowerIteration {
       color: !params || params.color === undefined ? this.color : params.color,
     });
 
-    const cube = new THREE.Mesh(cubeGeometry, material);
+    const mesh = new THREE.Mesh(geometry, material);
 
     if (params) {
-      cube.applyMatrix(this.matrix.clone().multiply(getMatrix(params)));
+      mesh.applyMatrix(this.matrix.clone().multiply(getMatrix(params)));
     } else {
-      cube.applyMatrix(this.matrix);
+      mesh.applyMatrix(this.matrix);
     }
 
-    this.grower.mesh.add(cube);
+    if (fixRotation) {
+      mesh.rotation.x += Math.PI / 2;
+    }
+
+    this.grower.mesh.add(mesh);
   }
 
   growMesh(shape, params) {

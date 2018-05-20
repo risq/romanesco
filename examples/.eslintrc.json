@@ -1,0 +1,17 @@
+{
+  "globals": {
+    "THREE": true,
+    "Vector2": true,
+    "Vector3": true,
+    "Shape": true,
+    "viewer": true,
+    "grower": true,
+    "rand": true,
+    "shapes": true,
+    "def": true,
+    "start": true
+  },
+  "rules": {
+    "func-names": ["off"]
+  }
+}

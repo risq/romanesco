@@ -8,6 +8,9 @@ viewer.scene.add(grower.mesh);
 
 Object.assign(window, {
   THREE,
+  Vector2: THREE.Vector2,
+  Vector3: THREE.Vector3,
+  Shape: THREE.Shape,
   viewer,
   grower,
   rand,

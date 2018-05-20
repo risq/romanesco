@@ -11,7 +11,6 @@ export default class Grower {
     this.maxObjects = 10000;
     this.depth = 0;
     this.maxDepth = 100;
-    this.endCallback = () => {};
   }
 
   start(iteration, endCallback) {
@@ -47,7 +46,9 @@ export default class Grower {
     this.depth++;
 
     if (!this.nextIterationCalls.length) {
-      this.endCallback();
+      if (this.endCallback) {
+        this.endCallback();
+      }
       return;
     }
 
