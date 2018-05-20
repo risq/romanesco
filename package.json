@@ -5,17 +5,18 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node server",
-    "dev":
-      "webpack-dev-server -d --config ./config/editor/webpack.config.dev.js",
-    "build-editor":
-      "NODE_ENV=production webpack --config ./config/editor/webpack.config.release.js",
+    "dev": "webpack-dev-server -d --config ./config/editor/webpack.config.dev.js",
+    "build-editor": "NODE_ENV=production webpack --config ./config/editor/webpack.config.release.js",
     "lint": "eslint src config",
     "lint-fix": "eslint src config --fix",
     "test": "echo \"tests: todo !\"",
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,jsx}": ["eslint", "git add"]
+    "*.{js,jsx}": [
+      "eslint",
+      "git add"
+    ]
   },
   "repository": {
     "type": "git",
@@ -39,13 +40,13 @@
     "hard-source-webpack-plugin": "^0.6.9",
     "html-webpack-plugin": "^3.2.0",
     "husky": "^0.14.3",
-    "less": "^3.0.4",
-    "less-loader": "^4.1.0",
     "lint-staged": "^7.1.1",
     "mini-css-extract-plugin": "^0.4.0",
     "monaco-editor-webpack-plugin": "^1.2.0",
+    "node-sass": "^4.9.0",
     "postcss-loader": "^2.1.5",
     "raw-loader": "^0.5.1",
+    "sass-loader": "^7.0.1",
     "style-loader": "^0.21.0",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "webpack": "^4.8.3",

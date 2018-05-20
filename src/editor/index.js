@@ -5,7 +5,7 @@ import editor from "./editor";
 import defaultScript from "!raw-loader!./ressources/defaultScript.js"; // eslint-disable-line
 import viewerHtml from "raw-loader!./iframe/viewer.html"; // eslint-disable-line
 
-import "./style/index.less";
+import "./style/index.scss";
 
 const iframeContainer = document.getElementById("iframe-container");
 let currentIframe;

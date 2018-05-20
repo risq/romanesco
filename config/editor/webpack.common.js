@@ -43,20 +43,12 @@ module.exports = {
         use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
       },
       {
-        test: /\.less$/,
+        test: /\.scss/,
         use: [
           MiniCssExtractPlugin.loader,
           "css-loader",
-          "less-loader",
+          "sass-loader",
           "postcss-loader",
-        ],
-      },
-      {
-        test: /\.glsl$/,
-        use: [
-          {
-            loader: "webpack-glsl-loader",
-          },
         ],
       },
     ],
