@@ -1,8 +1,8 @@
 import * as THREE from "three";
 
-import GrowerIteration from "./growerIteration";
+import SystemIteration from "./systemIteration";
 
-export default class Grower {
+export default class System {
   constructor({ viewer }) {
     this.viewer = viewer;
     this.rules = {};
@@ -20,10 +20,10 @@ export default class Grower {
 
   start(iteration, endCallback) {
     this.endCallback = endCallback;
-    const growerIteration = new GrowerIteration({
-      grower: this,
+    const systemIteration = new SystemIteration({
+      system: this,
     });
-    iteration.call(growerIteration);
+    iteration.call(systemIteration);
     this.iterate();
   }
 

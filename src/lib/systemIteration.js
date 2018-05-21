@@ -91,16 +91,16 @@ function getMatrix({
   return matrix;
 }
 
-export default class GrowerIteration {
-  constructor({ grower }) {
+export default class SystemIteration {
+  constructor({ system }) {
     this.rulesDepths = {};
     this.matrix = defaultMatrix.clone();
     this.color = 0xffffff;
-    this.grower = grower;
+    this.system = system;
   }
 
   call(ruleName, params) {
-    if (!this.grower.rules[ruleName]) {
+    if (!this.system.rules[ruleName]) {
       throw new Error(`Rule "${ruleName}" does not exist.`);
     }
 
@@ -119,23 +119,23 @@ export default class GrowerIteration {
     newIteration.rulesDepths[ruleName]++;
 
     if (
-      this.grower.rules[ruleName].maxDepth &&
-      this.rulesDepths[ruleName] > this.grower.rules[ruleName].maxDepth
+      this.system.rules[ruleName].maxDepth &&
+      this.rulesDepths[ruleName] > this.system.rules[ruleName].maxDepth
     ) {
       return;
     }
 
-    this.grower.nextIterationCalls.push({
+    this.system.nextIterationCalls.push({
       ruleName,
       iteration: newIteration,
     });
 
     if (
-      this.grower.rules[ruleName].maxDepth &&
-      this.rulesDepths[ruleName] === this.grower.rules[ruleName].maxDepth &&
-      this.grower.rules[ruleName].maxDepthCallback
+      this.system.rules[ruleName].maxDepth &&
+      this.rulesDepths[ruleName] === this.system.rules[ruleName].maxDepth &&
+      this.system.rules[ruleName].maxDepthCallback
     ) {
-      this.call(this.grower.rules[ruleName].maxDepthCallback);
+      this.call(this.system.rules[ruleName].maxDepthCallback);
     }
   }
 
@@ -270,11 +270,11 @@ export default class GrowerIteration {
   }
 
   instanciateMesh(geometry, params, { fixRotation } = {}) {
-    if (this.grower.objectsCount >= this.grower.maxObjects) {
+    if (this.system.objectsCount >= this.system.maxObjects) {
       return;
     }
 
-    this.grower.objectsCount++;
+    this.system.objectsCount++;
 
     const material = new THREE.MeshPhongMaterial({
       color: !params || params.color === undefined ? this.color : params.color,
@@ -292,15 +292,15 @@ export default class GrowerIteration {
       mesh.rotation.x += Math.PI / 2;
     }
 
-    this.grower.mesh.add(mesh);
+    this.system.mesh.add(mesh);
   }
 
   growMesh(shape, params) {
-    if (this.grower.objectsCount >= this.grower.maxObjects) {
+    if (this.system.objectsCount >= this.system.maxObjects) {
       return;
     }
 
-    this.grower.objectsCount++;
+    this.system.objectsCount++;
 
     const clonedShape = shape.map(point => point.clone()); // TODO
     // clonedShape.forEach(point => point.applyMatrix4(this.matrix))
@@ -389,7 +389,7 @@ export default class GrowerIteration {
             geometry.attributes.normal.array[i + 2];
         }
 
-        // this.grower.mesh.add(new THREE.VertexNormalsHelper( this.belowMesh, 2, 0x00ff00, 1 ))
+        // this.system.mesh.add(new THREE.VertexNormalsHelper( this.belowMesh, 2, 0x00ff00, 1 ))
 
         this.belowGeometry.attributes.normal.needsUpdate = true;
       }
@@ -404,10 +404,10 @@ export default class GrowerIteration {
       });
       const mesh = new THREE.Mesh(geometry, material);
 
-      this.grower.mesh.add(mesh);
+      this.system.mesh.add(mesh);
 
       if (this.belowGeometry) {
-        // this.grower.mesh.add(new THREE.VertexNormalsHelper( mesh, 2, 0x0000ff, 1 ))
+        // this.system.mesh.add(new THREE.VertexNormalsHelper( mesh, 2, 0x0000ff, 1 ))
       }
       this.lastMeshShape = clonedShape;
       this.belowPoints = points;
@@ -424,7 +424,7 @@ export default class GrowerIteration {
   getNewIteration(params = {}) {
     const rulesDepthClone = Object.assign({}, this.rulesDepths);
     return Object.assign(
-      Object.create(GrowerIteration.prototype),
+      Object.create(SystemIteration.prototype),
       this,
       { rulesDepths: rulesDepthClone },
       params

@@ -1,8 +1,8 @@
 import * as THREE from "three";
-import { Viewer, Grower, rand, shapes } from "../../index";
+import { Viewer, System, rand, shapes } from "../../index";
 
 const viewer = new Viewer();
-const grower = new Grower({ viewer });
+const system = new System({ viewer });
 
 Object.assign(window, {
   THREE,
@@ -10,9 +10,9 @@ Object.assign(window, {
   Vector3: THREE.Vector3,
   Shape: THREE.Shape,
   viewer,
-  grower,
+  system,
   rand,
   shapes,
-  def: grower.def.bind(grower),
-  start: grower.start.bind(grower),
+  def: system.def.bind(system),
+  start: system.start.bind(system),
 });
