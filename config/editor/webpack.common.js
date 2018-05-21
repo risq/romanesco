@@ -69,9 +69,10 @@ module.exports = {
       sourceMap: true,
       chunksSortMode: "dependency",
       excludeChunks: ["embeddedViewer"],
-      templateParameters: {
+      templateParameters: compilation => ({
+        publicPath: compilation.options.output.publicPath,
         examplesFiles,
-      },
+      }),
     }),
     new MonacoWebpackPlugin({
       languages: ["javascript"],

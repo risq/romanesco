@@ -8,12 +8,13 @@
     "start": "node server",
     "dev": "webpack-dev-server -d --config ./config/editor/webpack.config.dev.js",
     "build-editor": "NODE_ENV=production webpack --config ./config/editor/webpack.config.release.js",
+    "build-editor-pages": "NODE_ENV=production webpack --config ./config/editor/webpack.config.release-pages.js",
     "lint": "eslint src config",
     "lint-fix": "eslint src config --fix",
     "test": "echo \"tests: todo !\"",
     "precommit": "lint-staged",
-    "predeploy": "npm run build-editor",
-    "deploy": "gh-pages -d build"
+    "predeploy": "npm run build-editor-pages",
+    "deploy": "gh-pages -d build/editor-release-pages"
   },
   "lint-staged": {
     "*.{js,jsx}": [

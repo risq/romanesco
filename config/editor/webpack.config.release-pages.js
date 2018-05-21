@@ -9,13 +9,14 @@ const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const common = require("./webpack.common.js");
 
 const ROOT_DIR = path.resolve(__dirname, "../..");
-const DIST_DIR = path.resolve(ROOT_DIR, "build/editor-release");
+const DIST_DIR = path.resolve(ROOT_DIR, "build/editor-release-pages");
 
 module.exports = merge(common, {
   mode: "production",
   devtool: "source-map",
   output: {
     path: DIST_DIR,
+    publicPath: "/romanesco/",
   },
   optimization: {
     minimizer: [
