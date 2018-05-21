@@ -9,22 +9,11 @@ const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const common = require("./webpack.common.js");
 
 const ROOT_DIR = path.resolve(__dirname, "../..");
-const DIST_DIR = path.resolve(ROOT_DIR, "build");
 
 module.exports = merge(common, {
   mode: "production",
   devtool: "source-map",
   optimization: {
-    runtimeChunk: false,
-    splitChunks: {
-      cacheGroups: {
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name: "vendors",
-          chunks: "all",
-        },
-      },
-    },
     minimizer: [
       new UglifyJsWebpackPlugin({
         cache: true,
@@ -34,7 +23,7 @@ module.exports = merge(common, {
     ],
   },
   plugins: [
-    new CleanWebpackPlugin(DIST_DIR),
+    new CleanWebpackPlugin("build", { root: ROOT_DIR }),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new CompressionWebpackPlugin({
       asset: "[path].gz[query]",

@@ -1,6 +1,6 @@
 import { transform } from "babel-standalone";
 
-import viewerHtml from "raw-loader!./iframe/viewer.html"; // eslint-disable-line
+import viewerHtml from "raw-loader!./embedded/index.html"; // eslint-disable-line
 
 let container;
 let currentIframe;

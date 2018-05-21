@@ -15,7 +15,7 @@ const examplesFiles = dirTree(EXAMPLES_DIR, { extensions: /\.js$/ });
 module.exports = {
   entry: {
     editor: path.join(ROOT_DIR, "src/editor/index.js"),
-    viewer: path.join(ROOT_DIR, "src/editor/iframe/viewer.js"),
+    embeddedViewer: path.join(ROOT_DIR, "src/editor/embedded/embeddedViewer.js"),
   },
   output: {
     path: DIST_DIR,
@@ -68,7 +68,7 @@ module.exports = {
       inject: true,
       sourceMap: true,
       chunksSortMode: "dependency",
-      chunks: ["editor"],
+      excludeChunks: ["embeddedViewer"],
       templateParameters: {
         examplesFiles,
       },
