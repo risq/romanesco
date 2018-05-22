@@ -6,21 +6,21 @@
   "homepage": "https://risq.github.io/romanesco/",
   "scripts": {
     "start": "node server",
-    "dev": "webpack-dev-server -d --config ./config/editor/webpack.config.dev.js",
-    "build-editor": "NODE_ENV=production webpack --config ./config/editor/webpack.config.release.js",
-    "build-editor-pages": "NODE_ENV=production webpack --config ./config/editor/webpack.config.release-pages.js",
-    "lint": "eslint src config",
-    "lint-fix": "eslint src config --fix",
+    "dev":
+      "webpack-dev-server -d --config ./config/editor/webpack.config.dev.js",
+    "build-editor":
+      "NODE_ENV=production webpack --config ./config/editor/webpack.config.release.js",
+    "build-editor-pages":
+      "NODE_ENV=production webpack --config ./config/editor/webpack.config.release-pages.js",
+    "lint": "eslint src config examples",
+    "lint-fix": "eslint src config examples --fix",
     "test": "echo \"tests: todo !\"",
     "precommit": "lint-staged",
     "predeploy": "npm run build-editor-pages",
     "deploy": "gh-pages -d build/editor-release-pages"
   },
   "lint-staged": {
-    "*.{js,jsx}": [
-      "eslint",
-      "git add"
-    ]
+    "*.js": ["eslint"]
   },
   "repository": {
     "type": "git",
