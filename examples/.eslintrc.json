@@ -12,6 +12,7 @@
     "start": true
   },
   "rules": {
-    "func-names": ["off"]
+    "func-names": ["off"],
+    "indent": ["error", 4]
   }
 }

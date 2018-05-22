@@ -9,7 +9,6 @@
   },
   "rules": {
     "quotes": ["error", "double"],
-    "indent": ["error", 2],
     "function-paren-newline": ["error", "consistent"],
     "import/no-extraneous-dependencies": "off",
     "comma-dangle": [
