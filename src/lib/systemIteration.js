@@ -101,7 +101,9 @@ export default class SystemIteration {
   constructor({ system }) {
     this.rulesDepths = {};
     this.matrix = defaultMatrix.clone();
-    this.color = 0xffffff;
+    this.hue = 0;
+    this.saturation = 1;
+    this.lightness = 1;
     this.system = system;
   }
 
@@ -439,22 +441,24 @@ export default class SystemIteration {
 
   getColor(transform) {
     const {
-      color, hue, sat, lum,
+      color, hue, sat, lightness,
     } = transform || {};
 
-    const baseColor = color || this.color;
-    const hsl = chroma(baseColor).hsl();
+    if (color) {
+      const hslColor = chroma(color).hsl();
+      [this.hue, this.saturation, this.lightness] = hslColor;
+    }
 
     if (hue) {
-      hsl[0] += hue;
+      this.hue = (this.hue + hue) % 360;
     }
     if (sat) {
-      hsl[1] *= sat;
+      this.saturation = Math.max(0, Math.min(this.saturation * sat, 1));
     }
-    if (lum) {
-      hsl[2] *= lum;
+    if (lightness) {
+      this.lightness = Math.max(0, Math.min(this.lightness * lightness, 1));
     }
 
-    return chroma.hsl(hsl).hex();
+    return chroma.hsl(this.hue, this.saturation, this.lightness).hex();
   }
 }
