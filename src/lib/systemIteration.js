@@ -69,24 +69,29 @@ function getTrianglesNormals({
   return normalSum2.normalize();
 }
 
-function getMatrix({
-  x = 0,
-  y = 0,
-  z = 0,
-  rx = 0,
-  ry = 0,
-  rz = 0,
-  s = 1,
-  sx,
-  sy,
-  sz,
-} = {}) {
+function getMatrix(transform) {
+  const positionX = (transform && transform.x) || 0;
+  const positionY = (transform && transform.y) || 0;
+  const positionZ = (transform && transform.z) || 0;
+
+  const rotationX = (transform && transform.rx) || 0;
+  const rotationY = (transform && transform.ry) || 0;
+  const rotationZ = (transform && transform.rz) || 0;
+
+  const scaleX = (transform && (transform.sx || transform.s)) || 1;
+  const scaleY = (transform && (transform.sy || transform.s)) || 1;
+  const scaleZ = (transform && (transform.sz || transform.s)) || 1;
+
   const matrix = new THREE.Matrix4().compose(
-    new THREE.Vector3(x, y, z),
+    new THREE.Vector3(positionX, positionY, positionZ),
     new THREE.Quaternion().setFromEuler(
-      new THREE.Euler(deg2rad(rx), deg2rad(ry), deg2rad(rz))
+      new THREE.Euler(
+        deg2rad(rotationX),
+        deg2rad(rotationY),
+        deg2rad(rotationZ)
+      )
     ),
-    new THREE.Vector3(sx || s, sy || s, sz || s)
+    new THREE.Vector3(scaleX, scaleY, scaleZ)
   );
 
   return matrix;
@@ -105,7 +110,8 @@ export default class SystemIteration {
       throw new Error(`Rule "${ruleName}" does not exist.`);
     }
 
-    const matrix = this.matrix.clone()
+    const matrix = this.matrix
+      .clone()
       .multiply(getMatrix(transform, this.matrix));
 
     const newIteration = this.getNewIteration({
@@ -154,30 +160,30 @@ export default class SystemIteration {
     }
   }
 
-  box(params) {
-    this.instanciateMesh(cubeGeometry, params);
+  box(transform) {
+    this.instanciateMesh(cubeGeometry, transform);
   }
 
-  sphere(params, { segments = 12 } = {}) {
+  sphere(transform, { segments = 12 } = {}) {
     const geometry = new THREE.SphereBufferGeometry(0.5, segments, segments);
 
-    this.instanciateMesh(geometry, params);
+    this.instanciateMesh(geometry, transform);
   }
 
-  plane(params) {
+  plane(transform) {
     const geometry = new THREE.PlaneBufferGeometry(1);
 
-    this.instanciateMesh(geometry, params);
+    this.instanciateMesh(geometry, transform);
   }
 
-  cone(params, { segments = 12 } = {}) {
+  cone(transform, { segments = 12 } = {}) {
     const geometry = new THREE.ConeBufferGeometry(0.5, 1, segments, 1);
 
-    this.instanciateMesh(geometry, params);
+    this.instanciateMesh(geometry, transform);
   }
 
   cylinder(
-    params,
+    transform,
     { segments = 12, radiusTop = 0.5, radiusBottom = 0.5 } = {}
   ) {
     const geometry = new THREE.CylinderBufferGeometry(
@@ -187,17 +193,17 @@ export default class SystemIteration {
       segments
     );
 
-    this.instanciateMesh(geometry, params);
+    this.instanciateMesh(geometry, transform);
   }
 
-  circle(params, { segments = 12 } = {}) {
+  circle(transform, { segments = 12 } = {}) {
     const geometry = new THREE.CircleBufferGeometry(0.5, segments, segments);
 
-    this.instanciateMesh(geometry, params);
+    this.instanciateMesh(geometry, transform);
   }
 
   torus(
-    params,
+    transform,
     { tubeRadius = 0.4, radialSegments = 8, tubularSegments = 12 } = {}
   ) {
     const geometry = new THREE.TorusBufferGeometry(
@@ -207,34 +213,34 @@ export default class SystemIteration {
       tubularSegments
     );
 
-    this.instanciateMesh(geometry, params);
+    this.instanciateMesh(geometry, transform);
   }
 
-  tetrahedron(params) {
+  tetrahedron(transform) {
     const geometry = new THREE.TetrahedronBufferGeometry(0.5);
 
-    this.instanciateMesh(geometry, params);
+    this.instanciateMesh(geometry, transform);
   }
 
-  octahedron(params) {
+  octahedron(transform) {
     const geometry = new THREE.OctahedronBufferGeometry(0.5);
 
-    this.instanciateMesh(geometry, params);
+    this.instanciateMesh(geometry, transform);
   }
 
-  icosahedron(params) {
+  icosahedron(transform) {
     const geometry = new THREE.IcosahedronBufferGeometry(0.5);
 
-    this.instanciateMesh(geometry, params);
+    this.instanciateMesh(geometry, transform);
   }
 
-  dodecahedron(params) {
+  dodecahedron(transform) {
     const geometry = new THREE.DodecahedronBufferGeometry(0.5);
 
-    this.instanciateMesh(geometry, params);
+    this.instanciateMesh(geometry, transform);
   }
 
-  createExtrudeMesh(params, { shape } = {}) {
+  createExtrudeMesh(transform, { shape } = {}) {
     if (!shape) {
       throw new Error("ExtrudedShape mesh requires a `shape` option");
     }
@@ -245,10 +251,10 @@ export default class SystemIteration {
       bevelEnabled: false,
     });
 
-    this.instanciateMesh(geometry, params, { fixRotation: true });
+    this.instanciateMesh(geometry, transform, { fixRotation: true });
   }
 
-  createLatheMesh(params, { points, segments = 12 } = {}) {
+  createLatheMesh(transform, { points, segments = 12 } = {}) {
     if (!points) {
       throw new Error("Lathe mesh requires a `points` option");
     }
@@ -257,16 +263,16 @@ export default class SystemIteration {
       segments,
     });
 
-    this.instanciateMesh(geometry, params);
+    this.instanciateMesh(geometry, transform);
   }
 
-  createParametricMesh(params, { func, slices = 12, stacks = 12 }) {
+  createParametricMesh(transform, { func, slices = 12, stacks = 12 }) {
     if (!func) {
       throw new Error("Parametric mesh requires a `func` option");
     }
     const geometry = new THREE.ParametricBufferGeometry(func, slices, stacks);
 
-    this.instanciateMesh(geometry, params);
+    this.instanciateMesh(geometry, transform);
   }
 
   instanciateMesh(geometry, transform, { fixRotation } = {}) {
@@ -431,9 +437,11 @@ export default class SystemIteration {
     );
   }
 
-  getColor({
-    color, hue, sat, lum,
-  } = {}) {
+  getColor(transform) {
+    const {
+      color, hue, sat, lum,
+    } = transform || {};
+
     const baseColor = color || this.color;
     const hsl = chroma(baseColor).hsl();
 
