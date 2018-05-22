@@ -8,8 +8,9 @@ const CompressionWebpackPlugin = require("compression-webpack-plugin");
 
 const common = require("./webpack.common.js");
 
+const OUTPUT_DIR = "build/editor-release-pages";
 const ROOT_DIR = path.resolve(__dirname, "../..");
-const DIST_DIR = path.resolve(ROOT_DIR, "build/editor-release-pages");
+const DIST_DIR = path.resolve(ROOT_DIR, OUTPUT_DIR);
 
 module.exports = merge(common, {
   mode: "production",
@@ -28,7 +29,7 @@ module.exports = merge(common, {
     ],
   },
   plugins: [
-    new CleanWebpackPlugin("build", { root: ROOT_DIR }),
+    new CleanWebpackPlugin(OUTPUT_DIR, { root: ROOT_DIR }),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new CompressionWebpackPlugin({
       asset: "[path].gz[query]",
