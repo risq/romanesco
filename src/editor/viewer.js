@@ -1,6 +1,11 @@
 import { transform } from "babel-standalone";
+import { template } from "lodash";
+
+import config from "./config";
 
 import viewerHtml from "raw-loader!./embedded/index.html"; // eslint-disable-line
+
+const viewerHtmlTemplate = template(viewerHtml);
 
 let container;
 let currentIframe;
@@ -9,9 +14,12 @@ function init(element) {
   container = element;
 }
 
-function createIframe(content) {
+function createIframe(script) {
   const iframe = document.createElement("iframe");
-  iframe.srcdoc = viewerHtml.replace("{{ script }}", content);
+  iframe.srcdoc = viewerHtmlTemplate({
+    script,
+    rootPath: config.rootPath,
+  });
   iframe.sandbox = "allow-forms allow-scripts allow-same-origin";
 
   if (currentIframe) {
