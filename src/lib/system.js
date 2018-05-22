@@ -30,7 +30,7 @@ export default class System {
     this.iterate();
   }
 
-  def(name, cb) {
+  rule(name, cb) {
     const rule = {
       rule: cb,
     };

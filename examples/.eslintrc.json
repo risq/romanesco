@@ -8,7 +8,7 @@
     "system": true,
     "rand": true,
     "shapes": true,
-    "def": true,
+    "rule": true,
     "start": true
   },
   "rules": {

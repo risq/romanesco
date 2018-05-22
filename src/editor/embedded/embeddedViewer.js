@@ -13,6 +13,6 @@ Object.assign(window, {
   system,
   rand,
   shapes,
-  def: system.def.bind(system),
+  rule: system.rule.bind(system),
   start: system.start.bind(system),
 });

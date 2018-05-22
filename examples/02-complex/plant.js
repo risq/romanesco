@@ -1,4 +1,4 @@
-def("tree", function () {
+rule("tree", function () {
     this.growMesh(shapes.circle());
 
     if (Math.random() > 0.8) {
@@ -9,7 +9,7 @@ def("tree", function () {
     }
 }).maxDepth(30, "leaf");
 
-def("leaf", function () {
+rule("leaf", function () {
     this.box({ s: 3, color: 0x00ff00 });
     this.call("leaf", {
         y: rand.between(-1, 5),
@@ -18,7 +18,7 @@ def("leaf", function () {
     });
 }).maxDepth(4);
 
-def("pot", function () {
+rule("pot", function () {
     const shape = rand.bool()
         ? shapes.circle(64, rand.between(0.5, 1), rand.between(0.5, 1))
         : shapes.square(rand.between(0.75, 2), rand.between(0.75, 2));
@@ -47,7 +47,7 @@ def("pot", function () {
     this.growMesh(shape, { s: bottomRadius });
 });
 
-def("plant", function () {
+rule("plant", function () {
     this.call("pot", { color: 0xff6a00 });
     this.call("tree", { ry: rand.between(0, 360), color: 0x5c1d00 });
 });

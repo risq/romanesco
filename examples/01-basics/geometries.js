@@ -1,61 +1,61 @@
 const transform = { y: 1.5, rx: -5, s: 1.2 };
 
-def("box", function () {
+rule("box", function () {
     this.box();
     this.call("box", transform);
 }).maxDepth(6);
 
-def("sphere", function () {
+rule("sphere", function () {
     this.sphere();
     this.call("sphere", transform);
 }).maxDepth(6);
 
-def("plane", function () {
+rule("plane", function () {
     this.plane();
     this.call("plane", transform);
 }).maxDepth(6);
 
-def("cone", function () {
+rule("cone", function () {
     this.cone();
     this.call("cone", transform);
 }).maxDepth(6);
 
-def("cylinder", function () {
+rule("cylinder", function () {
     this.cylinder();
     this.call("cylinder", transform);
 }).maxDepth(6);
 
-def("circle", function () {
+rule("circle", function () {
     this.circle();
     this.call("circle", transform);
 }).maxDepth(6);
 
-def("torus", function () {
+rule("torus", function () {
     this.torus();
     this.call("torus", transform);
 }).maxDepth(6);
 
-def("tetrahedron", function () {
+rule("tetrahedron", function () {
     this.tetrahedron();
     this.call("tetrahedron", transform);
 }).maxDepth(6);
 
-def("octahedron", function () {
+rule("octahedron", function () {
     this.octahedron();
     this.call("octahedron", transform);
 }).maxDepth(6);
 
-def("icosahedron", function () {
+rule("icosahedron", function () {
     this.icosahedron();
     this.call("icosahedron", transform);
 }).maxDepth(6);
 
-def("dodecahedron", function () {
+rule("dodecahedron", function () {
     this.dodecahedron();
     this.call("dodecahedron", transform);
 }).maxDepth(6);
 
-def("extrudedShape", function () {
+rule("extrudedShape", function () {
     const shape = new Shape();
     shape.lineTo(-0.5, 1);
     shape.lineTo(0.5, 1);
@@ -64,7 +64,7 @@ def("extrudedShape", function () {
     this.call("extrudedShape", transform);
 }).maxDepth(6);
 
-def("lathe", function () {
+rule("lathe", function () {
     this.createLatheMesh(null, {
         points: [
             new Vector2(0, -0.5),
@@ -77,7 +77,7 @@ def("lathe", function () {
     this.call("lathe", transform);
 }).maxDepth(6);
 
-def("parametric", function () {
+rule("parametric", function () {
     this.createParametricMesh(null, {
         func: (u, t, target) => {
             const v = 2 * Math.PI * t;
