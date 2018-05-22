@@ -74,6 +74,7 @@
     "event-emitter": "^0.3.5",
     "lodash": "^4.17.10",
     "monaco-editor": "^0.13.1",
-    "navigo": "^7.1.2"
+    "navigo": "^7.1.2",
+    "store": "^2.0.12"
   }
 }

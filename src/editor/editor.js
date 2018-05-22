@@ -1,5 +1,6 @@
 import * as monaco from "monaco-editor"; // eslint-disable-line
 import { debounce } from "lodash";
+import store from "store";
 
 import defaultScript from "!raw-loader!./ressources/defaultScript.js"; // eslint-disable-line
 
@@ -48,7 +49,10 @@ export default class Editor {
     this.monacoEditor.addCommand(
       monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, // eslint-disable-line no-bitwise
       () => {
-        viewer.loadCode(this.monacoEditor.getValue());
+        const code = this.monacoEditor.getValue();
+        store.set("code", code);
+        this.viewer.loadCode(code);
+        this.monacoEditor.getAction("editor.action.formatDocument").run();
         this.monacoEditor.getAction("editor.action.formatDocument").run();
       }
     );
@@ -81,6 +85,7 @@ export default class Editor {
   }
 
   reset() {
-    this.setValue(defaultScript);
+    const saved = store.get("code");
+    this.setValue(saved || defaultScript);
   }
 }
