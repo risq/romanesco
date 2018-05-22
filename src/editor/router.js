@@ -4,9 +4,10 @@ const HOME_PAGE = Symbol("home");
 const EXAMPLE_PAGE = Symbol("example");
 
 export default class Router {
-  constructor({ rootPath, editor }) {
+  constructor({ rootPath, editor, loader }) {
     this.editor = editor;
     this.rootPath = rootPath;
+    this.loader = loader;
 
     this.navigo = new Navigo(
       `${window.location.protocol}//${window.location.host}${this.rootPath}`
@@ -31,11 +32,9 @@ export default class Router {
       "examples/:folder/:file": ({ folder, file }) => {
         this.currentPage = EXAMPLE_PAGE;
 
-        fetch(`${this.rootPath}ressources/examples/${folder}/${file}.js`)
-          .then(response => response.text())
-          .then((exampleCode) => {
-            this.editor.setValue(exampleCode);
-          });
+        this.loader.loadExample(folder, file).then((exampleCode) => {
+          this.editor.setValue(exampleCode);
+        });
       },
     });
   }

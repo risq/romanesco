@@ -2,8 +2,6 @@ import * as monaco from "monaco-editor"; // eslint-disable-line
 import { debounce } from "lodash";
 import store from "store";
 
-import defaultScript from "!raw-loader!./ressources/defaultScript.js"; // eslint-disable-line
-
 monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
   noLib: true,
   allowNonTsExtensions: true,
@@ -21,8 +19,10 @@ monaco.editor.defineTheme("romanesco", {
 });
 
 export default class Editor {
-  constructor(element, { viewer }) {
+  constructor(element, { viewer, loader }) {
     this.viewer = viewer;
+    this.loader = loader;
+
     this.monacoEditor = monaco.editor.create(element, {
       theme: "romanesco",
       language: "javascript",
@@ -86,6 +86,13 @@ export default class Editor {
 
   reset() {
     const saved = store.get("code");
-    this.setValue(saved || defaultScript);
+
+    if (saved) {
+      this.setValue(saved);
+    } else {
+      this.loader.loadExample("01-basics", "spiral").then((exampleCode) => {
+        this.setValue(exampleCode);
+      });
+    }
   }
 }
