@@ -19,7 +19,10 @@ export default class System {
   }
 
   start(iteration, endCallback) {
-    this.endCallback = endCallback;
+    if (endCallback) {
+      this.endCallback = endCallback;
+    }
+
     const systemIteration = new SystemIteration({
       system: this,
     });
@@ -44,7 +47,9 @@ export default class System {
 
   iterate() {
     if (this.depth >= this.maxDepth || this.objectsCount >= this.maxObjects) {
-      this.endCallback();
+      if (this.endCallback) {
+        this.endCallback();
+      }
       return;
     }
 
@@ -57,8 +62,6 @@ export default class System {
       return;
     }
 
-    console.log("iteration", this.depth, "objects", this.objectsCount); // eslint-disable-line
-
     const iterationCalls = [...this.nextIterationCalls]; // clone array
 
     this.nextIterationCalls = []; // empty old array
@@ -66,6 +69,8 @@ export default class System {
     iterationCalls.forEach(({ ruleName, iteration }) => {
       this.rules[ruleName].rule.call(iteration);
     });
+
+    console.log("iteration", this.depth, "objects", this.objectsCount); // eslint-disable-line
 
     if (this.viewer) {
       this.viewer.needsUpdate = true;
