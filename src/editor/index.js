@@ -1,10 +1,18 @@
-import editor from "./editor";
-import viewer from "./viewer";
-import router from "./router";
+import Editor from "./editor";
+import Viewer from "./viewer";
+import Router from "./router";
 
 import "./style/index.scss";
 
-editor.init(document.getElementById("editor"));
-viewer.init(document.getElementById("viewer"));
+const rootPath = document.body.dataset.rootPath || "/";
 
-router.init();
+const viewer = new Viewer(document.getElementById("viewer"), { rootPath });
+const editor = new Editor(document.getElementById("editor"), { viewer });
+
+const router = new Router({ rootPath, editor });
+
+export default {
+  editor,
+  viewer,
+  router,
+};

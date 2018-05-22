@@ -1,43 +1,42 @@
 import Navigo from "navigo";
 
-import config from "./config";
-
-import editor from "./editor";
-
 const HOME_PAGE = Symbol("home");
 const EXAMPLE_PAGE = Symbol("example");
 
-let currentPage;
+export default class Router {
+  constructor({ rootPath, editor }) {
+    this.editor = editor;
+    this.rootPath = rootPath;
 
-const router = new Navigo(
-  `${window.location.protocol}//${window.location.host}${config.rootPath}`
-);
+    this.navigo = new Navigo(
+      `${window.location.protocol}//${window.location.host}${this.rootPath}`
+    );
 
-router.on({
-  "/": () => {
-    if (currentPage === HOME_PAGE) {
-      return;
-    }
+    this.initRoutes();
 
-    currentPage = HOME_PAGE;
+    this.navigo.resolve();
+  }
 
-    editor.reset();
-  },
-  "examples/:folder/:file": ({ folder, file }) => {
-    currentPage = EXAMPLE_PAGE;
+  initRoutes() {
+    this.navigo.on({
+      "/": () => {
+        if (this.currentPage === HOME_PAGE) {
+          return;
+        }
 
-    fetch(`${root}ressources/examples/${folder}/${file}.js`)
-      .then(response => response.text())
-      .then((exampleCode) => {
-        editor.setValue(exampleCode);
-      });
-  },
-});
+        this.currentPage = HOME_PAGE;
 
-function init() {
-  router.resolve();
+        this.editor.reset();
+      },
+      "examples/:folder/:file": ({ folder, file }) => {
+        this.currentPage = EXAMPLE_PAGE;
+
+        fetch(`${this.rootPath}ressources/examples/${folder}/${file}.js`)
+          .then(response => response.text())
+          .then((exampleCode) => {
+            this.editor.setValue(exampleCode);
+          });
+      },
+    });
+  }
 }
-
-export default {
-  init,
-};

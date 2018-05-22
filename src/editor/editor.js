@@ -1,13 +1,7 @@
 import * as monaco from "monaco-editor"; // eslint-disable-line
-import EventEmitter from "event-emitter";
 import { debounce } from "lodash";
 
-import viewer from "./viewer";
-
 import defaultScript from "!raw-loader!./ressources/defaultScript.js"; // eslint-disable-line
-
-let editor;
-const events = new EventEmitter();
 
 monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
   noLib: true,
@@ -25,73 +19,68 @@ monaco.editor.defineTheme("romanesco", {
   },
 });
 
-function init(element) {
-  editor = monaco.editor.create(element, {
-    theme: "romanesco",
-    language: "javascript",
-    minimap: {
-      enabled: false,
-    },
-    lineDecorationsWidth: 0,
-    lineNumbersMinChars: 1,
-    wordWrap: true,
-    fontFamily: "Source Code Pro, monospace",
-    scrollbar: {
-      verticalScrollbarSize: 4,
-    },
-    renderIndentGuides: true,
-    fontSize: 14,
-  });
+export default class Editor {
+  constructor(element, { viewer }) {
+    this.viewer = viewer;
+    this.monacoEditor = monaco.editor.create(element, {
+      theme: "romanesco",
+      language: "javascript",
+      minimap: {
+        enabled: false,
+      },
+      lineDecorationsWidth: 0,
+      lineNumbersMinChars: 1,
+      wordWrap: true,
+      fontFamily: "Source Code Pro, monospace",
+      scrollbar: {
+        verticalScrollbarSize: 4,
+      },
+      renderIndentGuides: true,
+      fontSize: 14,
+    });
 
-  editor.model.onDidChangeContent(
-    debounce(() => {
-      // loadCode()
-    }, 1500)
-  );
+    this.monacoEditor.model.onDidChangeContent(
+      debounce(() => {
+        // loadCode()
+      }, 1500)
+    );
 
-  editor.addCommand(
-    monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, // eslint-disable-line no-bitwise
-    () => {
-      viewer.loadCode(editor.getValue());
-      editor.getAction("editor.action.formatDocument").run();
-    }
-  );
-
-  document.addEventListener(
-    "keydown",
-    (e) => {
-      if (
-        e.keyCode === 191 &&
-        (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)
-      ) {
-        e.preventDefault();
-        editor.getAction("editor.action.commentLine").run();
+    this.monacoEditor.addCommand(
+      monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, // eslint-disable-line no-bitwise
+      () => {
+        viewer.loadCode(this.monacoEditor.getValue());
+        this.monacoEditor.getAction("editor.action.formatDocument").run();
       }
-    },
-    false
-  );
-}
+    );
 
-function getValue() {
-  return editor.getValue();
-}
+    document.addEventListener(
+      "keydown",
+      (e) => {
+        if (
+          e.keyCode === 191 &&
+          (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)
+        ) {
+          e.preventDefault();
+          this.monacoEditor.getAction("editor.action.commentLine").run();
+        }
+      },
+      false
+    );
+  }
 
-function setValue(value, { updateViewer = true } = {}) {
-  editor.setValue(value);
+  getValue() {
+    return this.monacoEditor.getValue();
+  }
 
-  if (updateViewer) {
-    viewer.loadCode(value);
+  setValue(value, { updateViewer = true } = {}) {
+    this.monacoEditor.setValue(value);
+
+    if (updateViewer) {
+      this.viewer.loadCode(value);
+    }
+  }
+
+  reset() {
+    this.setValue(defaultScript);
   }
 }
-
-function reset() {
-  setValue(defaultScript);
-}
-
-export default {
-  init,
-  getValue,
-  setValue,
-  reset,
-  events,
-};
