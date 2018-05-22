@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import chroma from "chroma-js";
 
 import { deg2rad } from "./helpers";
 
@@ -99,18 +100,17 @@ export default class SystemIteration {
     this.system = system;
   }
 
-  call(ruleName, params) {
+  call(ruleName, transform) {
     if (!this.system.rules[ruleName]) {
       throw new Error(`Rule "${ruleName}" does not exist.`);
     }
 
-    const matrix = params
-      ? this.matrix.clone().multiply(getMatrix(params, this.matrix))
-      : this.matrix.clone();
+    const matrix = this.matrix.clone()
+      .multiply(getMatrix(transform, this.matrix));
 
     const newIteration = this.getNewIteration({
       matrix,
-      color: (params && params.color) || this.color, // TODO better handing
+      color: this.getColor(transform),
     });
 
     if (!newIteration.rulesDepths[ruleName]) {
@@ -269,7 +269,7 @@ export default class SystemIteration {
     this.instanciateMesh(geometry, params);
   }
 
-  instanciateMesh(geometry, params, { fixRotation } = {}) {
+  instanciateMesh(geometry, transform, { fixRotation } = {}) {
     if (this.system.objectsCount >= this.system.maxObjects) {
       return;
     }
@@ -277,13 +277,13 @@ export default class SystemIteration {
     this.system.objectsCount++;
 
     const material = new THREE.MeshPhongMaterial({
-      color: !params || params.color === undefined ? this.color : params.color,
+      color: this.getColor(transform),
     });
 
     const mesh = new THREE.Mesh(geometry, material);
 
-    if (params) {
-      mesh.applyMatrix(this.matrix.clone().multiply(getMatrix(params)));
+    if (transform) {
+      mesh.applyMatrix(this.matrix.clone().multiply(getMatrix(transform)));
     } else {
       mesh.applyMatrix(this.matrix);
     }
@@ -295,7 +295,7 @@ export default class SystemIteration {
     this.system.mesh.add(mesh);
   }
 
-  growMesh(shape, params) {
+  growMesh(shape, transform) {
     if (this.system.objectsCount >= this.system.maxObjects) {
       return;
     }
@@ -305,9 +305,9 @@ export default class SystemIteration {
     const clonedShape = shape.map(point => point.clone()); // TODO
     // clonedShape.forEach(point => point.applyMatrix4(this.matrix))
 
-    if (params) {
+    if (transform) {
       clonedShape.forEach(point =>
-        point.applyMatrix4(this.matrix.clone().multiply(getMatrix(params))));
+        point.applyMatrix4(this.matrix.clone().multiply(getMatrix(transform))));
     } else {
       clonedShape.forEach(point => point.applyMatrix4(this.matrix));
     }
@@ -399,7 +399,7 @@ export default class SystemIteration {
       // geometry.computeVertexNormals();
 
       const material = new THREE.MeshPhongMaterial({
-        color: this.color,
+        color: this.getColor(transform),
         // wireframe: true
       });
       const mesh = new THREE.Mesh(geometry, material);
@@ -429,5 +429,24 @@ export default class SystemIteration {
       { rulesDepths: rulesDepthClone },
       params
     );
+  }
+
+  getColor({
+    color, hue, sat, lum,
+  } = {}) {
+    const baseColor = color || this.color;
+    const hsl = chroma(baseColor).hsl();
+
+    if (hue) {
+      hsl[0] += hue;
+    }
+    if (sat) {
+      hsl[1] *= sat;
+    }
+    if (lum) {
+      hsl[2] *= lum;
+    }
+
+    return chroma.hsl(hsl).hex();
   }
 }
