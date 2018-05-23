@@ -141,25 +141,29 @@ export default class SystemIteration {
     if (
       this.system.rules[ruleName].maxDepth &&
       this.rulesDepths[ruleName] === this.system.rules[ruleName].maxDepth &&
-      this.system.rules[ruleName].maxDepthCallback
+      this.system.rules[ruleName].maxDepthReachedRuleName
     ) {
-      this.call(this.system.rules[ruleName].maxDepthCallback);
+      this.call(this.system.rules[ruleName].maxDepthReachedRuleName);
     }
   }
 
-  repeat(count, params, cb) {
-    const transformMatrix = getMatrix(params);
+  repeat(count, transform, callback, endRuleName) {
+    const transformMatrix = getMatrix(transform);
     const oldMatrix = this.matrix.clone();
+    let nextIteration;
 
     for (let i = 0; i < count; i++) {
       const matrix = oldMatrix.multiply(transformMatrix).clone();
 
-      const newIteration = this.getNewIteration({
+      nextIteration = this.getNewIteration({
         matrix,
+        color: this.getColor(transform),
       });
 
-      cb.call(newIteration);
+      callback.call(nextIteration);
     }
+
+    nextIteration.call(endRuleName);
   }
 
   box(transform) {

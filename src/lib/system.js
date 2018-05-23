@@ -38,9 +38,9 @@ export default class System {
     this.rules[name] = rule;
 
     return {
-      maxDepth(maxDepth, callback) {
+      maxDepth(maxDepth, ruleName) {
         rule.maxDepth = maxDepth;
-        rule.maxDepthCallback = callback;
+        rule.maxDepthReachedRuleName = ruleName;
       },
     };
   }
