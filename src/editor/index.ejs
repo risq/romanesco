@@ -10,7 +10,7 @@
   <body data-root-path="<%= publicPath %>">
     <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a href="<%= publicPath %>" class="navbar-item" data-navigo>
+        <a href="/" class="navbar-item" data-navigo>
           <h1>romanesco</h1>
         </a>
 
@@ -41,7 +41,7 @@
                         <% subFolder.children.forEach(function(exampleFile) {
                           var exampleName = exampleFile.name.replace(/\.[^/.]+$/, "");
                           if (!exampleFile.children) { %>
-                            <a href="<%= publicPath %>examples/<%= subFolder.name %>/<%= exampleName %>" class="dropdown-item" data-navigo>
+                            <a href="/examples/<%= subFolder.name %>/<%= exampleName %>" class="dropdown-item" data-navigo>
                               <%= exampleName %>
                             </a>
                           <% }
