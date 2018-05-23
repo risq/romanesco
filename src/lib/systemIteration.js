@@ -150,14 +150,14 @@ export default class SystemIteration {
   repeat(count, transform, callback, endRuleName) {
     const transformMatrix = getMatrix(transform);
     const oldMatrix = this.matrix.clone();
-    let nextIteration;
+    let nextIteration = this;
 
     for (let i = 0; i < count; i++) {
       const matrix = oldMatrix.multiply(transformMatrix).clone();
 
-      nextIteration = this.getNewIteration({
+      nextIteration = nextIteration.getNewIteration({
         matrix,
-        color: this.getColor(transform),
+        color: nextIteration.getColor(transform),
       });
 
       callback.call(nextIteration);
