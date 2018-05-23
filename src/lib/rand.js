@@ -1,3 +1,5 @@
+import chroma from "chroma-js";
+
 // Uniform distribution
 export function float() {
   return Math.random();
@@ -25,11 +27,15 @@ export function bool(percentage = 0.5) {
 }
 
 export function angle(max = 360) {
-  return Math.betweenInt(0, max);
+  return betweenInt(0, max);
 }
 
 export function oneIn(n) {
   return between(0, n) < 1;
+}
+
+export function color({ hue = angle(), sat = float(), lightness = float() }) {
+  return chroma.hsl(hue, sat, lightness);
 }
 
 // Triangular distribution
