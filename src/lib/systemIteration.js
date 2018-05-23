@@ -162,8 +162,9 @@ export default class SystemIteration {
 
       callback.call(nextIteration);
     }
-
-    nextIteration.call(endRuleName);
+    if (endRuleName) {
+      nextIteration.call(endRuleName);
+    }
   }
 
   box(transform) {
