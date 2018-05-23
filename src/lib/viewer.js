@@ -34,6 +34,9 @@ export default class Viewer {
     this.scene.add(lights[1]);
     this.scene.add(lights[2]);
 
+    this.container = new THREE.Object3D();
+    this.scene.add(this.container);
+
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -69,7 +72,7 @@ export default class Viewer {
   }
 
   addMesh(mesh) {
-    this.scene.add(mesh);
+    this.container.add(mesh);
   }
 
   bindEvents() {
@@ -110,5 +113,29 @@ export default class Viewer {
       },
       false
     );
+  }
+
+  focusCamera() {
+    const boundingBox = new THREE.Box3().setFromObject(this.container);
+    const boundingSphere = new THREE.Sphere();
+    boundingBox.getBoundingSphere(boundingSphere);
+
+    const objectAngularSize = (this.camera.fov * Math.PI / 180) * 1.3;
+    const distanceToCamera = boundingSphere.radius / Math.tan(objectAngularSize / 2);
+    const distanceToCamera2 = distanceToCamera * distanceToCamera;
+    const len = Math.sqrt(distanceToCamera2 + distanceToCamera2);
+
+    this.camera.position.set(len, len, len);
+
+    this.camera.lookAt(boundingSphere.center);
+    this.controls.target.set(
+      boundingSphere.center.x,
+      boundingSphere.center.y,
+      boundingSphere.center.z
+    );
+
+    this.camera.updateProjectionMatrix();
+
+    this.needsUpdate = true;
   }
 }
