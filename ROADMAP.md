@@ -17,7 +17,7 @@
 #### Random
 
 * [ ] Seeded random
-* [ ] More random tools (random int, random color, random from list...)
+* [x] More random tools (random int, random color, random from list...)
 
 #### Viewer
 

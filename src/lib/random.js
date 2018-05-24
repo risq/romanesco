@@ -14,7 +14,7 @@ export function between(min = 0, max = 1) {
 }
 
 export function betweenInt(min = 0, max = 1) {
-  return Math.floor(between(min, max));
+  return Math.floor(between(min, max + 1));
 }
 
 // Generic helpers (uniform distribution)
@@ -36,6 +36,14 @@ export function oneIn(n) {
 
 export function color({ hue = angle(), sat = float(), lightness = float() }) {
   return chroma.hsl(hue, sat, lightness);
+}
+
+export function from(...items) {
+  return items[betweenInt(0, items.length - 1)];
+}
+
+export function fromList(items) {
+  return from(...items);
 }
 
 // Triangular distribution
