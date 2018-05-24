@@ -6,6 +6,7 @@
 * [ ] Materials
 * [ ] Wireframe option
 * [ ] RepeatCircle, repeatSphere, repeatSquare
+* [ ] Weighted rules
 
 #### `growMesh` feature
 
@@ -24,8 +25,23 @@
 * [ ] Handle window resize
 * [ ] Camera/lights options
 
+#### Shapes
+
+* [ ] Star shape
+* [ ] Gear shape
+* [ ] Shape modifiers
+
+
 ### Editor
 
 * [ ] Handle window resize
 * [x] Backup code in local storage
+* [ ] New project (reset editor)
+* [ ] Warning before opening a new example (if modifications)
 * [ ] Persist camera position
+* [ ] Display logs/errors
+
+
+### Other
+
+* [ ] Project structure (externalize editor)
