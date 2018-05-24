@@ -6,7 +6,7 @@ rule("spiral", function () {
         rx: 10,
         hue: 2,
     });
-}).maxDepth(50, "spiral2");
+}).maxDepth(50, "spiral2"); // When max depth has been reached, call "spiral2"
 
 rule("spiral2", function () {
     this.box();
