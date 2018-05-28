@@ -6,12 +6,9 @@
   "homepage": "https://risq.github.io/romanesco/",
   "scripts": {
     "start": "node server",
-    "dev":
-      "webpack-dev-server -d --config ./config/editor/webpack.config.dev.js",
-    "build-editor":
-      "NODE_ENV=production webpack --config ./config/editor/webpack.config.release.js",
-    "build-editor-pages":
-      "NODE_ENV=production webpack --config ./config/editor/webpack.config.release-pages.js",
+    "dev": "webpack-dev-server -d --config ./config/editor/webpack.config.dev.js",
+    "build-editor": "NODE_ENV=production webpack --config ./config/editor/webpack.config.release.js",
+    "build-editor-pages": "NODE_ENV=production webpack --config ./config/editor/webpack.config.release-pages.js",
     "lint": "eslint src config examples",
     "lint-fix": "eslint src config examples --fix",
     "test": "echo \"tests: todo !\"",
@@ -20,7 +17,9 @@
     "deploy": "gh-pages -d build/editor-release-pages"
   },
   "lint-staged": {
-    "*.js": ["eslint"]
+    "*.js": [
+      "eslint"
+    ]
   },
   "repository": {
     "type": "git",
@@ -64,6 +63,7 @@
   },
   "dependencies": {
     "chroma-js": "^1.3.7",
+    "framebus": "^3.0.1",
     "three-orbit-controls": "^82.1.0"
   },
   "peerDependencies": {

@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import bus from "framebus";
+
 import { Viewer, System, rand, shapes } from "../../index";
 
 const viewer = new Viewer();
@@ -15,4 +17,9 @@ Object.assign(window, {
   shapes,
   rule: system.rule.bind(system),
   start: system.start.bind(system),
+});
+
+bus.on("take-screenshot", () => {
+  viewer.render();
+  bus.emit("screenshot", viewer.renderer.domElement.toDataURL());
 });

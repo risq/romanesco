@@ -1,6 +1,8 @@
 import { transform } from "babel-standalone";
 import { template } from "lodash";
 
+import bus from "framebus";
+
 import viewerHtml from "raw-loader!./embedded/index.html"; // eslint-disable-line
 
 const viewerHtmlTemplate = template(viewerHtml);
@@ -9,6 +11,8 @@ export default class Viewer {
   constructor(element, { rootPath }) {
     this.container = element;
     this.rootPath = rootPath;
+
+    bus.on("screenshot", Viewer.onScreenshot);
   }
 
   createIframe(script) {
@@ -36,5 +40,23 @@ export default class Viewer {
     } catch (err) {
       // console.log(err);
     }
+  }
+
+  screenshot() {
+    if (!this.currentIframe) {
+      return;
+    }
+
+    bus.emit("take-screenshot");
+  }
+
+  static onScreenshot(data) {
+    const w = window.open("", "");
+    w.document.title = "Screenshot";
+
+    const img = new Image();
+    img.src = data;
+
+    w.document.body.appendChild(img);
   }
 }
