@@ -47,7 +47,7 @@ export default class Viewer {
       return;
     }
 
-    bus.emit("take-screenshot");
+    bus.emit("take-screenshot", { width: 1024, height: 1024 });
   }
 
   static onScreenshot(data) {
