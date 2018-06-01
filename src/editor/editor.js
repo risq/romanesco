@@ -1,5 +1,7 @@
 import * as monaco from "monaco-editor"; // eslint-disable-line
 import { debounce } from "lodash";
+import prettier from "prettier/standalone";
+import prettierBabylonPlugin from "prettier/parser-babylon";
 import store from "store";
 
 monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
@@ -52,8 +54,14 @@ export default class Editor {
         const code = this.monacoEditor.getValue();
         store.set("code", code);
         this.viewer.loadCode(code);
-        this.monacoEditor.getAction("editor.action.formatDocument").run();
-        this.monacoEditor.getAction("editor.action.formatDocument").run();
+
+        const formattedCode = prettier.format(code, {
+          parser: "babylon",
+          plugins: [prettierBabylonPlugin],
+          tabWidth: 4,
+          trailingComma: "es5",
+        });
+        this.setValue(formattedCode, { updateViewer: false });
       }
     );
 

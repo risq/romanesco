@@ -76,6 +76,7 @@
     "lodash": "^4.17.10",
     "monaco-editor": "^0.13.1",
     "navigo": "^7.1.2",
+    "prettier": "^1.13.4",
     "store": "^2.0.12"
   }
 }
