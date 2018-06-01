@@ -69,29 +69,60 @@ function getTrianglesNormals({
   return normalSum2.normalize();
 }
 
+function getPreparedTransform(transform = {}) {
+  return {
+    x: transform.x || 0,
+    y: transform.y || 0,
+    z: transform.z || 0,
+
+    rx: transform.rx || 0,
+    ry: transform.ry || 0,
+    rz: transform.rz || 0,
+
+    sx: (transform.sx || transform.s) || 1,
+    sy: (transform.sy || transform.s) || 1,
+    sz: (transform.sz || transform.s) || 1,
+  };
+}
+
+// TODO: handle colors
+function lerpTransform(originTransform, destTransform, amount) {
+  const preparedOriginTransform = getPreparedTransform(originTransform);
+  const preparedDestTransform = getPreparedTransform(destTransform);
+
+  return {
+    x: (preparedDestTransform.x - preparedOriginTransform.x) * amount,
+    y: (preparedDestTransform.y - preparedOriginTransform.y) * amount,
+    z: (preparedDestTransform.z - preparedOriginTransform.z) * amount,
+    rx: (preparedDestTransform.rx - preparedOriginTransform.rx) * amount,
+    ry: (preparedDestTransform.ry - preparedOriginTransform.ry) * amount,
+    rz: (preparedDestTransform.rz - preparedOriginTransform.rz) * amount,
+    sx: (preparedDestTransform.sx - preparedOriginTransform.sx) * amount,
+    sy: (preparedDestTransform.sy - preparedOriginTransform.sy) * amount,
+    sz: (preparedDestTransform.sz - preparedOriginTransform.sz) * amount,
+  };
+}
+
 function getMatrix(transform) {
-  const positionX = (transform && transform.x) || 0;
-  const positionY = (transform && transform.y) || 0;
-  const positionZ = (transform && transform.z) || 0;
-
-  const rotationX = (transform && transform.rx) || 0;
-  const rotationY = (transform && transform.ry) || 0;
-  const rotationZ = (transform && transform.rz) || 0;
-
-  const scaleX = (transform && (transform.sx || transform.s)) || 1;
-  const scaleY = (transform && (transform.sy || transform.s)) || 1;
-  const scaleZ = (transform && (transform.sz || transform.s)) || 1;
-
+  const preparedTransform = getPreparedTransform(transform);
   const matrix = new THREE.Matrix4().compose(
-    new THREE.Vector3(positionX, positionY, positionZ),
+    new THREE.Vector3(
+      preparedTransform.x,
+      preparedTransform.y,
+      preparedTransform.z
+    ),
     new THREE.Quaternion().setFromEuler(
       new THREE.Euler(
-        deg2rad(rotationX),
-        deg2rad(rotationY),
-        deg2rad(rotationZ)
+        deg2rad(preparedTransform.rx),
+        deg2rad(preparedTransform.ry),
+        deg2rad(preparedTransform.rz)
       )
     ),
-    new THREE.Vector3(scaleX, scaleY, scaleZ)
+    new THREE.Vector3(
+      preparedTransform.sx,
+      preparedTransform.sy,
+      preparedTransform.sz
+    )
   );
 
   return matrix;
@@ -151,20 +182,37 @@ export default class SystemIteration {
     const transformMatrix = getMatrix(transform);
     const oldMatrix = this.matrix.clone();
     let nextIteration = this;
+    const roundedCount = Math.round(count);
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < roundedCount; i++) {
+      callback.call(nextIteration);
+
       const matrix = oldMatrix.multiply(transformMatrix).clone();
 
       nextIteration = nextIteration.getNewIteration({
         matrix,
         color: nextIteration.getColor(transform),
       });
-
-      callback.call(nextIteration);
     }
     if (endRuleName) {
       nextIteration.call(endRuleName);
     }
+  }
+
+  repeatBetween(count, originTransform, destTransform, callback, endRuleName) {
+    const roundedCount = Math.round(count);
+
+    const iterationTransform = lerpTransform(
+      originTransform,
+      destTransform,
+      1 / (roundedCount - 1)
+    );
+
+    const nextIteration = this.getNewIteration({
+      matrix: this.matrix.clone().multiply(getMatrix(originTransform)),
+    });
+
+    nextIteration.repeat(roundedCount, iterationTransform, callback, endRuleName);
   }
 
   box(transform) {
