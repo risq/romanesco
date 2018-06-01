@@ -34,7 +34,7 @@ export function oneIn(n) {
   return between(0, n) < 1;
 }
 
-export function color({ hue = angle(), sat = float(), lightness = float() }) {
+export function color({ hue = angle(), sat = float(), lightness = float() } = {}) {
   return chroma.hsl(hue, sat, lightness);
 }
 
