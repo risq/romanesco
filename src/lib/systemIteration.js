@@ -178,6 +178,10 @@ export default class SystemIteration {
     }
   }
 
+  transform(transform) {
+    this.matrix.multiply(getMatrix(transform));
+  }
+
   repeat(count, transform, callback, endRuleName) {
     const transformMatrix = getMatrix(transform);
     const oldMatrix = this.matrix.clone();
