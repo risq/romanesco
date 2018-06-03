@@ -3,7 +3,7 @@ rule("spiral", function () {
     this.call("spiral", { y: 1.5, s: 0.95, rx: 10 });
 
     // 10% of the time, create a new branch
-    if (rand.oneIn(10)) {
+    if (this.rand.oneIn(10)) {
         this.call("spiral", {
             y: 1.5,
             s: 0.95,
@@ -15,5 +15,5 @@ rule("spiral", function () {
 }).maxDepth(100);
 
 start(function () {
-    this.call("spiral", { color: rand.color({ lightness: 0.5 }) });
+    this.call("spiral", { color: this.rand.color({ lightness: 0.5 }) });
 });
