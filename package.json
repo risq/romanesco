@@ -25,7 +25,7 @@
     "type": "git",
     "url": "git@github.com:risq/romanesco.git"
   },
-  "author": "Valentin LEDRAPIER <valentin.ledrapier@gmail.com>",
+  "author": "Valentin LEDRAPIER <contact@valentinledrapier.com>",
   "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^8.5.0",
