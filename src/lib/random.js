@@ -52,6 +52,45 @@ export default class Random {
     return this.from(...items);
   }
 
+  weighted(choices) {
+    if (!Array.isArray(choices) || choices.some(choice => typeof choice !== "object")) {
+      throw new Error(
+        "Invalid usage of `random.weighted()`: first parameter has to be an array of objects"
+      );
+    }
+
+    const preparedChoices = choices.map((choice) => {
+      if (choice.weight === undefined) {
+        return { value: choice.value, weight: 1 };
+      }
+
+      if (typeof choice.weight !== "number" || Number.isNaN(choice.weight) || choice.weight <= 0) {
+        throw new Error(
+          `Invalid weight "${choice.weight}": weight has to be valid number and greater than 0`
+        );
+      }
+
+      return choice;
+    });
+
+    const totalWeight = preparedChoices.reduce(
+      (totalWeight, { weight }) => totalWeight + weight,
+      0
+    );
+
+    let random = this.float() * totalWeight;
+
+    for (let i = 0; i < preparedChoices.length; i++) {
+      if (random < preparedChoices[i].weight) {
+        return preparedChoices[i].value;
+      }
+
+      random -= preparedChoices[i].weight;
+    }
+
+    throw new Error("Something went wrong during `random.weighted()` selection");
+  }
+
   // Triangular distribution
   triang() {
     return 1 - Math.sqrt(this.float());

@@ -48,6 +48,20 @@ export default class System {
     };
   }
 
+  weightedRules(name, rules) {
+    if (rules.some(({ rule }) => rule === undefined)) {
+      throw new Error("weightedRules: a `rule` property has to be provided");
+    }
+
+    return this.rule(name, function rule() {
+      this.rand.weighted(
+        rules.map(
+          ({ rule, weight }) => ({ value: rule, weight })
+        )
+      ).call(this);
+    });
+  }
+
   iterate() {
     if (this.depth >= this.maxDepth || this.objectsCount >= this.maxObjects) {
       if (this.endCallback) {
