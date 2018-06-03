@@ -140,17 +140,24 @@ export default class SystemIteration {
     this.rand = new Random(seed);
   }
 
-  getNewIteration(params = {}) {
-    const rulesDepthClone = Object.assign({}, this.rulesDepths);
-    return Object.assign(
+  getNewIteration(params = {}, { resetSeed = false }) {
+    const newIteration = Object.assign(
       Object.create(SystemIteration.prototype),
       this,
-      { rulesDepths: rulesDepthClone },
+      {
+        rulesDepths: Object.assign({}, this.rulesDepths),
+      },
       params
     );
+
+    if (resetSeed) {
+      newIteration.rand = this.rand.clone();
+    }
+
+    return newIteration;
   }
 
-  call(ruleName, transform) {
+  call(ruleName, transform, options = {}) {
     if (!this.system.rules[ruleName]) {
       throw new Error(`Rule "${ruleName}" does not exist.`);
     }
@@ -162,7 +169,7 @@ export default class SystemIteration {
     const newIteration = this.getNewIteration({
       matrix,
       color: this.getColor(transform),
-    });
+    }, options);
 
     if (!newIteration.rulesDepths[ruleName]) {
       newIteration.rulesDepths[ruleName] = 0;

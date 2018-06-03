@@ -2,8 +2,13 @@ import seedrandom from "seedrandom";
 import chroma from "chroma-js";
 
 export default class Random {
-  constructor(seed) {
+  constructor(seed = Math.random()) {
+    this.seed = seed;
     this.rng = seedrandom(seed);
+  }
+
+  clone() {
+    return new Random(this.seed);
   }
 
   // Uniform distribution

@@ -54,11 +54,7 @@ export default class System {
     }
 
     return this.rule(name, function rule() {
-      this.rand.weighted(
-        rules.map(
-          ({ rule, weight }) => ({ value: rule, weight })
-        )
-      ).call(this);
+      this.rand.weighted(rules.map(({ rule, weight }) => ({ value: rule, weight }))).call(this);
     });
   }
 
