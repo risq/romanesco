@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import bus from "framebus";
 
-import { Viewer, System, rand, shapes } from "../../index";
+import { Viewer, System, shapes } from "../../index";
 
 const viewer = new Viewer();
 const system = new System({ viewer });
@@ -13,7 +13,6 @@ Object.assign(window, {
   Shape: THREE.Shape,
   viewer,
   system,
-  rand,
   shapes,
   rule: system.rule.bind(system),
   start: system.start.bind(system),

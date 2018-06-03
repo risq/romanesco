@@ -3,7 +3,7 @@ import * as THREE from "three";
 import SystemIteration from "./systemIteration";
 
 export default class System {
-  constructor({ viewer }) {
+  constructor({ viewer, seed }) {
     this.viewer = viewer;
     this.rules = {};
     this.mesh = new THREE.Object3D();
@@ -12,20 +12,23 @@ export default class System {
     this.maxObjects = 10000;
     this.depth = 0;
     this.maxDepth = 100;
+    this.seed = seed;
 
     if (this.viewer) {
       this.viewer.addMesh(this.mesh);
     }
   }
 
-  start(iteration, endCallback) {
+  start(iteration, endCallback, { seed } = {}) {
     if (endCallback) {
       this.endCallback = endCallback;
     }
 
     const systemIteration = new SystemIteration({
       system: this,
+      seed: seed || this.seed,
     });
+
     iteration.call(systemIteration);
     this.iterate();
   }

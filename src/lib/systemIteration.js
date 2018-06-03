@@ -2,6 +2,7 @@ import * as THREE from "three";
 import chroma from "chroma-js";
 
 import { deg2rad } from "./helpers";
+import Random from "./random";
 
 const defaultMatrix = new THREE.Matrix4().compose(
   new THREE.Vector3(),
@@ -129,13 +130,24 @@ function getMatrix(transform) {
 }
 
 export default class SystemIteration {
-  constructor({ system }) {
+  constructor({ system, seed }) {
     this.rulesDepths = {};
     this.matrix = defaultMatrix.clone();
     this.hue = 0;
     this.saturation = 1;
     this.lightness = 1;
     this.system = system;
+    this.rand = new Random(seed);
+  }
+
+  getNewIteration(params = {}) {
+    const rulesDepthClone = Object.assign({}, this.rulesDepths);
+    return Object.assign(
+      Object.create(SystemIteration.prototype),
+      this,
+      { rulesDepths: rulesDepthClone },
+      params
+    );
   }
 
   call(ruleName, transform) {
@@ -484,16 +496,6 @@ export default class SystemIteration {
     }
 
     this.lastMeshShape = clonedShape;
-  }
-
-  getNewIteration(params = {}) {
-    const rulesDepthClone = Object.assign({}, this.rulesDepths);
-    return Object.assign(
-      Object.create(SystemIteration.prototype),
-      this,
-      { rulesDepths: rulesDepthClone },
-      params
-    );
   }
 
   getColor(transform) {

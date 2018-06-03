@@ -1,115 +1,122 @@
+import seedrandom from "seedrandom";
 import chroma from "chroma-js";
 
-// Uniform distribution
-export function float() {
-  return Math.random();
-}
+export default class Random {
+  constructor(seed) {
+    this.rng = seedrandom(seed);
+  }
 
-export function spread(amplitude = 1, initial = 0) {
-  return initial + (amplitude / 2 - float() * amplitude);
-}
+  // Uniform distribution
+  float() {
+    return this.rng();
+  }
 
-export function between(min = 0, max = 1) {
-  return float() * (min - max) + max;
-}
+  spread(amplitude = 1, initial = 0) {
+    return initial + (amplitude / 2 - this.float() * amplitude);
+  }
 
-export function betweenInt(min = 0, max = 1) {
-  return Math.floor(between(min, max + 1));
-}
+  between(min = 0, max = 1) {
+    return this.float() * (min - max) + max;
+  }
 
-// Generic helpers (uniform distribution)
-export function sign(value = 1) {
-  return float() < 0.5 ? value : -value;
-}
+  betweenInt(min = 0, max = 1) {
+    return Math.floor(this.between(min, max + 1));
+  }
 
-export function bool(percentage = 0.5) {
-  return float() < percentage;
-}
+  // Generic helpers (uniform distribution)
+  sign(value = 1) {
+    return this.float() < 0.5 ? value : -value;
+  }
 
-export function angle(max = 360) {
-  return betweenInt(0, max);
-}
+  bool(percentage = 0.5) {
+    return this.float() < percentage;
+  }
 
-export function oneIn(n) {
-  return between(0, n) < 1;
-}
+  angle(max = 360) {
+    return this.betweenInt(0, max);
+  }
 
-export function color({ hue = angle(), sat = float(), lightness = float() } = {}) {
-  return chroma.hsl(hue, sat, lightness);
-}
+  oneIn(n) {
+    return this.between(0, n) < 1;
+  }
 
-export function from(...items) {
-  return items[betweenInt(0, items.length - 1)];
-}
+  color({ hue = this.angle(), sat = this.float(), lightness = this.float() } = {}) {
+    return chroma.hsl(hue, sat, lightness);
+  }
 
-export function fromList(items) {
-  return from(...items);
-}
+  from(...items) {
+    return items[this.betweenInt(0, items.length - 1)];
+  }
 
-// Triangular distribution
-export function triang() {
-  return 1 - Math.sqrt(float());
-}
+  fromList(items) {
+    return this.from(...items);
+  }
 
-export function spreadTriang(amplitude = 1, initial = 0) {
-  return initial + (amplitude / 2 - triang() * amplitude);
-}
+  // Triangular distribution
+  triang() {
+    return 1 - Math.sqrt(this.float());
+  }
 
-export function betweenTriang(min = 0, max = 1) {
-  return triang * (min - max) + max;
-}
+  spreadTriang(amplitude = 1, initial = 0) {
+    return initial + (amplitude / 2 - this.triang() * amplitude);
+  }
 
-export function betweenIntTriang(min = 0, max = 1) {
-  return Math.floor(betweenTriang(min, max));
-}
+  betweenTriang(min = 0, max = 1) {
+    return this.triang() * (min - max) + max;
+  }
 
-// Inversed triangular distribution
-export function triangInv() {
-  return Math.sqrt(float());
-}
+  betweenIntTriang(min = 0, max = 1) {
+    return Math.floor(this.betweenTriang(min, max));
+  }
 
-export function spreadTriangInv(amplitude = 1, initial = 0) {
-  return initial + (amplitude / 2 - triangInv() * amplitude);
-}
+  // Inversed triangular distribution
+  triangInv() {
+    return Math.sqrt(this.float());
+  }
 
-export function betweenTriangInv(min = 0, max = 1) {
-  return triangInv * (min - max) + max;
-}
+  spreadTriangInv(amplitude = 1, initial = 0) {
+    return initial + (amplitude / 2 - this.triangInv() * amplitude);
+  }
 
-export function betweenIntTriangInv(min = 0, max = 1) {
-  return Math.floor(betweenTriangInv(min, max));
-}
+  betweenTriangInv(min = 0, max = 1) {
+    return this.triangInv() * (min - max) + max;
+  }
 
-// Exponential distribution
-export function exp() {
-  return float() ** 2;
-}
+  betweenIntTriangInv(min = 0, max = 1) {
+    return Math.floor(this.betweenTriangInv(min, max));
+  }
 
-export function spreadExp(amplitude = 1, initial = 0) {
-  return initial + (amplitude / 2 - exp() * amplitude);
-}
+  // Exponential distribution
+  exp() {
+    return this.float() ** 2;
+  }
 
-export function betweenExp(min = 0, max = 1) {
-  return exp * (min - max) + max;
-}
+  spreadExp(amplitude = 1, initial = 0) {
+    return initial + (amplitude / 2 - this.exp() * amplitude);
+  }
 
-export function betweenIntExp(min = 0, max = 1) {
-  return Math.floor(betweenExp(min, max));
-}
+  betweenExp(min = 0, max = 1) {
+    return this.exp() * (min - max) + max;
+  }
 
-// Inversed exponential distribution
-export function expInv() {
-  return 1 - float() ** 2;
-}
+  betweenIntExp(min = 0, max = 1) {
+    return Math.floor(this.betweenExp(min, max));
+  }
 
-export function spreadExpInv(amplitude = 1, initial = 0) {
-  return initial + (amplitude / 2 - expInv() * amplitude);
-}
+  // Inversed exponential distribution
+  expInv() {
+    return 1 - this.float() ** 2;
+  }
 
-export function betweenExpInv(min = 0, max = 1) {
-  return expInv * (min - max) + max;
-}
+  spreadExpInv(amplitude = 1, initial = 0) {
+    return initial + (amplitude / 2 - this.expInv() * amplitude);
+  }
 
-export function betweenIntExpInv(min = 0, max = 1) {
-  return Math.floor(betweenExpInv(min, max));
+  betweenExpInv(min = 0, max = 1) {
+    return this.expInv() * (min - max) + max;
+  }
+
+  betweenIntExpInv(min = 0, max = 1) {
+    return Math.floor(this.betweenExpInv(min, max));
+  }
 }
