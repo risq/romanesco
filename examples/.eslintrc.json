@@ -9,6 +9,7 @@
     "rand": true,
     "shapes": true,
     "rule": true,
+    "weightedRules": true,
     "start": true
   },
   "rules": {
