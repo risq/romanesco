@@ -135,7 +135,7 @@ export default class SystemIteration {
     this.matrix = defaultMatrix.clone();
     this.hue = 0;
     this.saturation = 1;
-    this.lightness = 1;
+    this.lightness = 0.5;
     this.system = system;
     this.rand = new Random(seed);
   }
