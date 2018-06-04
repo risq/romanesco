@@ -140,7 +140,7 @@ export default class SystemIteration {
     this.rand = new Random(seed);
   }
 
-  getNewIteration(params = {}, { resetSeed = false }) {
+  getNewIteration(params = {}, { resetSeed = false } = {}) {
     const newIteration = Object.assign(
       Object.create(SystemIteration.prototype),
       this,
