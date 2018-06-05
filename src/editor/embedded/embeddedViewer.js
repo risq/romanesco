@@ -15,7 +15,6 @@ Object.assign(window, {
   system,
   shapes,
   rule: system.rule.bind(system),
-  weightedRules: system.weightedRules.bind(system),
   start: system.start.bind(system),
 });
 

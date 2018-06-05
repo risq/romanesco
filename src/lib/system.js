@@ -33,12 +33,20 @@ export default class System {
     this.iterate();
   }
 
-  rule(name, cb) {
-    const rule = {
-      rule: cb,
+  rule(name, ruleFunction, weight = 1) {
+    if (!this.rules[name]) {
+      this.rules[name] = {
+        variations: [],
+      };
+    }
+
+    const rule = this.rules[name];
+    const variation = {
+      rule: ruleFunction,
+      weight,
     };
 
-    this.rules[name] = rule;
+    rule.variations.push(variation);
 
     return {
       maxDepth(maxDepth, ruleName) {
@@ -46,16 +54,6 @@ export default class System {
         rule.maxDepthReachedRuleName = ruleName;
       },
     };
-  }
-
-  weightedRules(name, rules) {
-    if (rules.some(({ rule }) => rule === undefined)) {
-      throw new Error("weightedRules: a `rule` property has to be provided");
-    }
-
-    return this.rule(name, function rule() {
-      this.rand.weighted(rules.map(({ rule, weight }) => ({ value: rule, weight }))).call(this);
-    });
   }
 
   iterate() {
@@ -80,7 +78,14 @@ export default class System {
     this.nextIterationCalls = []; // empty old array
 
     iterationCalls.forEach(({ ruleName, iteration }) => {
-      this.rules[ruleName].rule.call(iteration);
+      const rule = iteration.rand.weighted(
+        this.rules[ruleName].variations.map(({ rule, weight }) => ({
+          value: rule,
+          weight,
+        }))
+      );
+
+      rule.call(iteration);
     });
 
     console.log("iteration", this.depth, "objects", this.objectsCount); // eslint-disable-line
