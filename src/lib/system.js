@@ -19,7 +19,7 @@ export default class System {
     }
   }
 
-  start(iteration, endCallback, { seed } = {}) {
+  start(rule, endCallback, { seed } = {}) {
     if (endCallback) {
       this.endCallback = endCallback;
     }
@@ -29,7 +29,8 @@ export default class System {
       seed: seed || this.seed,
     });
 
-    iteration.call(systemIteration);
+    systemIteration.call(rule);
+
     this.iterate();
   }
 
@@ -49,9 +50,9 @@ export default class System {
     rule.variations.push(variation);
 
     return {
-      maxDepth(maxDepth, ruleName) {
+      maxDepth(maxDepth, maxDepthReachedRule) {
         rule.maxDepth = maxDepth;
-        rule.maxDepthReachedRuleName = ruleName;
+        rule.maxDepthReachedRule = maxDepthReachedRule;
       },
     };
   }

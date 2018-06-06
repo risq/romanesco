@@ -28,9 +28,4 @@ rule("floors", function () {
     );
 }).maxDepth(5);
 
-start(
-    function () {
-        this.call("skyscraper");
-    },
-    () => viewer.focusCamera()
-);
+start("skyscraper", () => viewer.focusCamera());

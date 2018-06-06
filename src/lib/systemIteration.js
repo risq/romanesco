@@ -157,8 +157,17 @@ export default class SystemIteration {
     return newIteration;
   }
 
-  call(ruleName, transform, options = {}) {
-    if (!this.system.rules[ruleName]) {
+  call(rule, transform, options = {}) {
+    let functionToCall;
+    let ruleName;
+
+    if (typeof rule === "string") {
+      ruleName = rule;
+    } else if (typeof rule === "function") {
+      functionToCall = rule;
+    }
+
+    if (ruleName && !this.system.rules[ruleName]) {
       throw new Error(`Rule "${ruleName}" does not exist.`);
     }
 
@@ -171,6 +180,12 @@ export default class SystemIteration {
       color: this.getColor(transform),
     }, options);
 
+    if (functionToCall) {
+      // If a function is passed instead of a rule name, call it directly
+      functionToCall.call(newIteration);
+      return;
+    }
+
     if (!newIteration.rulesDepths[ruleName]) {
       newIteration.rulesDepths[ruleName] = 0;
     }
@@ -178,22 +193,25 @@ export default class SystemIteration {
 
     if (
       this.system.rules[ruleName].maxDepth &&
-      this.rulesDepths[ruleName] > this.system.rules[ruleName].maxDepth
+        this.rulesDepths[ruleName] > this.system.rules[ruleName].maxDepth
     ) {
       return;
     }
 
+    // If a rule name is passed, call it next iteration
     this.system.nextIterationCalls.push({
       ruleName,
+      rule: ruleName,
       iteration: newIteration,
     });
 
     if (
+      ruleName &&
       this.system.rules[ruleName].maxDepth &&
       this.rulesDepths[ruleName] === this.system.rules[ruleName].maxDepth &&
-      this.system.rules[ruleName].maxDepthReachedRuleName
+      this.system.rules[ruleName].maxDepthReachedRule
     ) {
-      this.call(this.system.rules[ruleName].maxDepthReachedRuleName);
+      this.call(this.system.rules[ruleName].maxDepthReachedRule);
     }
   }
 
@@ -201,14 +219,14 @@ export default class SystemIteration {
     this.matrix.multiply(getMatrix(transform));
   }
 
-  repeat(count, transform, callback, endRuleName) {
+  repeat(count, transform, ruleFunction, endRuleName) {
     const transformMatrix = getMatrix(transform);
     const oldMatrix = this.matrix.clone();
     let nextIteration = this;
     const roundedCount = Math.round(count);
 
     for (let i = 0; i < roundedCount; i++) {
-      callback.call(nextIteration);
+      ruleFunction.call(nextIteration);
 
       const matrix = oldMatrix.multiply(transformMatrix).clone();
 
@@ -222,7 +240,7 @@ export default class SystemIteration {
     }
   }
 
-  repeatBetween(count, originTransform, destTransform, callback, endRuleName) {
+  repeatBetween(count, originTransform, destTransform, ruleFunction, endRuleName) {
     const roundedCount = Math.round(count);
 
     const iterationTransform = lerpTransform(
@@ -235,7 +253,7 @@ export default class SystemIteration {
       matrix: this.matrix.clone().multiply(getMatrix(originTransform)),
     });
 
-    nextIteration.repeat(roundedCount, iterationTransform, callback, endRuleName);
+    nextIteration.repeat(roundedCount, iterationTransform, ruleFunction, endRuleName);
   }
 
   box(transform) {
@@ -493,6 +511,7 @@ export default class SystemIteration {
       if (this.belowGeometry) {
         // this.system.mesh.add(new THREE.VertexNormalsHelper( mesh, 2, 0x0000ff, 1 ))
       }
+
       this.lastMeshShape = clonedShape;
       this.belowPoints = points;
       this.belowIndex = index;
