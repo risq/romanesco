@@ -21,8 +21,17 @@ function getTrianglesNormals({
   belowPoints,
   belowIndex,
 }) {
-  if (!belowGeometry) {
-    return new THREE.Vector3(0, 1, 0); // TODO: handle this case: first iteration (base)
+  // Bottom and top cases
+  if (!belowGeometry || i >= pointsCount) {
+    const point = points[i % pointsCount];
+    const pointBefore = points[(i + pointsCount - 1) % pointsCount];
+    const pointAfter = points[(i + 1) % pointsCount];
+
+    return new THREE.Vector3(
+      -pointBefore.x + point.x - pointAfter.x + point.x,
+      -pointBefore.y + point.y - pointAfter.y + point.y,
+      -pointBefore.z + point.z - pointAfter.z + point.z
+    );
   }
 
   const upperTrianglesIndexes =
@@ -404,8 +413,7 @@ export default class SystemIteration {
 
     this.system.objectsCount++;
 
-    const clonedShape = shape.map(point => point.clone()); // TODO
-    // clonedShape.forEach(point => point.applyMatrix4(this.matrix))
+    const clonedShape = shape.map(point => point.clone());
 
     if (transform) {
       clonedShape.forEach(point =>
@@ -451,17 +459,15 @@ export default class SystemIteration {
 
       normalVectors = normalVectors.map(
         (normalVector, i) =>
-          (i < pointsCount
-            ? getTrianglesNormals({
-              i,
-              points,
-              pointsCount,
-              index,
-              belowGeometry: this.belowGeometry,
-              belowPoints: this.belowPoints,
-              belowIndex: this.belowIndex,
-            })
-            : new THREE.Vector3(0, 1, 0)) // TODO: handle this case: top points
+          getTrianglesNormals({
+            i,
+            points,
+            pointsCount,
+            index,
+            belowGeometry: this.belowGeometry,
+            belowPoints: this.belowPoints,
+            belowIndex: this.belowIndex,
+          })
       );
 
       const normals = new Float32Array(
@@ -491,8 +497,6 @@ export default class SystemIteration {
             geometry.attributes.normal.array[i + 2];
         }
 
-        // this.system.mesh.add(new THREE.VertexNormalsHelper( this.belowMesh, 2, 0x00ff00, 1 ))
-
         this.belowGeometry.attributes.normal.needsUpdate = true;
       }
 
@@ -507,10 +511,6 @@ export default class SystemIteration {
       const mesh = new THREE.Mesh(geometry, material);
 
       this.system.mesh.add(mesh);
-
-      if (this.belowGeometry) {
-        // this.system.mesh.add(new THREE.VertexNormalsHelper( mesh, 2, 0x0000ff, 1 ))
-      }
 
       this.lastMeshShape = clonedShape;
       this.belowPoints = points;

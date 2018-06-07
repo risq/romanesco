@@ -6,12 +6,12 @@
 * [ ] Materials
 * [ ] Wireframe option
 * [ ] RepeatCircle, repeatSphere, repeatSquare
-* [ ] Weighted rules
+* [x] Weighted rules
 
 #### `growMesh` feature
 
 * [ ] Caps (bottom/top)
-* [ ] Normals of bottom and top
+* [x] Normals of bottom and top
 * [ ] Flat/smooth option
 * [ ] Handle mixed smooth and flat normals
 
