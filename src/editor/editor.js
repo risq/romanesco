@@ -12,9 +12,9 @@ monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
 monaco.editor.defineTheme("romanesco", {
   base: "vs-dark",
   inherit: true,
-  rules: [{ background: "EDF9FA" }],
+  rules: [],
   colors: {
-    "editor.background": "#000000",
+    "editor.background": "#040606",
     "editor.foreground": "#fefefe",
     "editor.lineHighlightBackground": "#FFFFFF10",
   },
@@ -31,12 +31,12 @@ export default class Editor {
       minimap: {
         enabled: false,
       },
-      lineDecorationsWidth: 0,
+      lineDecorationsWidth: 6,
       lineNumbersMinChars: 1,
       wordWrap: true,
       fontFamily: "Source Code Pro, monospace",
       scrollbar: {
-        verticalScrollbarSize: 4,
+        verticalScrollbarSize: 8,
       },
       renderIndentGuides: true,
       fontSize: 14,
