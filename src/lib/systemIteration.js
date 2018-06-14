@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import chroma from "chroma-js";
+import uuid from "uuid/v4";
 
 import { deg2rad } from "./helpers";
 import Random from "./random";
@@ -204,6 +205,7 @@ export default class SystemIteration {
     }
     newIteration.rulesDepths[ruleName]++;
 
+    // Max depth has been reached, abort
     if (
       this.system.rules[ruleName].maxDepth &&
         this.rulesDepths[ruleName] > this.system.rules[ruleName].maxDepth
@@ -218,13 +220,14 @@ export default class SystemIteration {
       iteration: newIteration,
     });
 
+    // Max depth has just been reached, call end rule
     if (
       ruleName &&
       this.system.rules[ruleName].maxDepth &&
       this.rulesDepths[ruleName] === this.system.rules[ruleName].maxDepth &&
       this.system.rules[ruleName].maxDepthReachedRule
     ) {
-      this.call(this.system.rules[ruleName].maxDepthReachedRule);
+      newIteration.call(this.system.rules[ruleName].maxDepthReachedRule);
     }
   }
 
@@ -233,24 +236,15 @@ export default class SystemIteration {
   }
 
   repeat(count, transform, ruleFunction, endRuleName) {
-    const transformMatrix = getMatrix(transform);
-    const oldMatrix = this.matrix.clone();
-    let nextIteration = this;
     const roundedCount = Math.round(count);
 
-    for (let i = 0; i < roundedCount; i++) {
-      ruleFunction.call(nextIteration);
+    const tempRuleName = uuid();
+    this.system.rule(tempRuleName, function tempRule() {
+      ruleFunction.call(this);
+      this.call(tempRuleName, transform);
+    }).maxDepth(roundedCount, endRuleName);
 
-      const matrix = oldMatrix.multiply(transformMatrix).clone();
-
-      nextIteration = nextIteration.getNewIteration({
-        matrix,
-        color: nextIteration.getColor(transform),
-      });
-    }
-    if (endRuleName) {
-      nextIteration.call(endRuleName);
-    }
+    this.call(tempRuleName);
   }
 
   repeatBetween(count, originTransform, destTransform, ruleFunction, endRuleName) {
