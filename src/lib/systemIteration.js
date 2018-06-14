@@ -189,6 +189,10 @@ export default class SystemIteration {
       color: this.getColor(transform),
     }, options);
 
+    if (options.resetDepth) {
+      newIteration.rulesDepths[ruleName] = 0;
+    }
+
     if (functionToCall) {
       // If a function is passed instead of a rule name, call it directly
       functionToCall.call(newIteration);
