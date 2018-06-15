@@ -18,7 +18,7 @@ export default class Viewer {
       75,
       window.innerWidth / window.innerHeight,
       0.1,
-      1000
+      100000000
     );
 
     const lights = [];
