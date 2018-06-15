@@ -208,7 +208,7 @@ export default class SystemIteration {
     // Max depth has been reached, abort
     if (
       this.system.rules[ruleName].maxDepth &&
-        this.rulesDepths[ruleName] > this.system.rules[ruleName].maxDepth
+        this.rulesDepths[ruleName] >= this.system.rules[ruleName].maxDepth
     ) {
       return;
     }
@@ -224,7 +224,7 @@ export default class SystemIteration {
     if (
       ruleName &&
       this.system.rules[ruleName].maxDepth &&
-      this.rulesDepths[ruleName] === this.system.rules[ruleName].maxDepth &&
+      this.rulesDepths[ruleName] === this.system.rules[ruleName].maxDepth - 1 &&
       this.system.rules[ruleName].maxDepthReachedRule
     ) {
       newIteration.call(this.system.rules[ruleName].maxDepthReachedRule);
@@ -235,19 +235,19 @@ export default class SystemIteration {
     this.matrix.multiply(getMatrix(transform));
   }
 
-  repeat(count, transform, ruleFunction, endRuleName) {
+  repeat(count, transform, ruleFunction, endRule) {
     const roundedCount = Math.round(count);
 
     const tempRuleName = uuid();
     this.system.rule(tempRuleName, function tempRule() {
       ruleFunction.call(this);
       this.call(tempRuleName, transform);
-    }).maxDepth(roundedCount, endRuleName);
+    }).maxDepth(roundedCount, endRule);
 
     this.call(tempRuleName);
   }
 
-  repeatBetween(count, originTransform, destTransform, ruleFunction, endRuleName) {
+  repeatBetween(count, originTransform, destTransform, ruleFunction, endRule) {
     const roundedCount = Math.round(count);
 
     const iterationTransform = lerpTransform(
@@ -260,7 +260,7 @@ export default class SystemIteration {
       matrix: this.matrix.clone().multiply(getMatrix(originTransform)),
     });
 
-    nextIteration.repeat(roundedCount, iterationTransform, ruleFunction, endRuleName);
+    nextIteration.repeat(roundedCount, iterationTransform, ruleFunction, endRule);
   }
 
   box(transform) {
